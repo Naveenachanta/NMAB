@@ -1,0 +1,108 @@
+[
+    {
+      "id": "1",
+      "name": "Hydrating Glow Serum",
+      "subcategory": "Serums",
+      "image": "/images/serum.png",
+      "tags": ["dry", "wrinkles"]
+    },
+    {
+      "id": "2",
+      "name": "Vitamin C Serum",
+      "subcategory": "Serums",
+      "image": "/images/vitamin-c.png",
+      "tags": ["dry", "dullness"]
+    },
+    {
+      "id": "3",
+      "name": "Soothing Toner",
+      "subcategory": "Toners",
+      "image": "/images/toner.png",
+      "tags": ["sensitive", "redness"]
+    },
+    {
+      "id": "4",
+      "name": "Foaming Cleanser",
+      "subcategory": "Cleansers",
+      "image": "/images/cleanser.png",
+      "tags": ["oily", "acne"]
+    },
+    {
+      "id": "5",
+      "name": "SPF 50 Sunscreen",
+      "subcategory": "Hair Masks",
+      "image": "/images/hair-mask.png",
+      "tags": ["dry", "frizz"]
+    },
+    {
+      "id": "6",
+      "name": "Matte Lipstick",
+      "subcategory": "Lipstick",
+      "image": "/images/lipstick.png",
+      "tags": ["normal"]
+    },
+    {
+      "id": "7",
+      "name": "HydraBoost Moisturizer",
+      "subcategory": "Moisturizers",
+      "image": "/images/moisturizer.png",
+      "tags": ["dry", "wrinkles"]
+    },
+    {
+      "id": "8",
+      "name": "Clarifying Shampoo",
+      "subcategory": "Shampoo",
+      "image": "/images/shampoo.png",
+      "tags": ["oily"]
+    },
+    {
+      "id": "9",
+      "name": "Volumizing Mascara",
+      "subcategory": "Mascara",
+      "image": "/images/mascara.png",
+      "tags": ["normal"]
+    },
+    {
+      "id": "10",
+      "name": "Rose Water Mist",
+      "subcategory": "Toners",
+      "image": "/images/rose-water.png",
+      "tags": ["sensitive"]
+    },
+    {
+      "id": "11",
+      "name": "Exfoliating Scrub",
+      "subcategory": "Exfoliators",
+      "image": "/images/scrub.png",
+      "tags": ["dullness"]
+    },
+    {
+      "id": "12",
+      "name": "SPF 50 Sunscreen",
+      "subcategory": "SPF/Sunscreen",
+      "image": "/images/sunscreen.png",
+      "tags": ["all", "sun-protection"]
+    },
+    {
+      "id": "13",
+      "name": "Brightening Face Mask",
+      "subcategory": "Face Masks",
+      "image": "/images/face-mask.png",
+      "tags": ["dark spots", "glow"]
+    },
+    {
+      "id": "14",
+      "name": "Under Eye Cream",
+      "subcategory": "Moisturizers",
+      "image": "/images/eye-cream.png",
+      "tags": ["wrinkles", "dark circles"]
+    },
+    {
+      "id": "15",
+      "name": "Makeup Sponge",
+      "subcategory": "Sponges",
+      "image": "/images/sponge.png",
+      "tags": ["normal"]
+    }
+  ]
+  
