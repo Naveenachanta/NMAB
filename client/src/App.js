@@ -7,6 +7,7 @@ import Preferences from './pages/Preferences';
 import ThankYou from './pages/ThankYou';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import GoogleRedirectHandler from './pages/GoogleRedirectHandler';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="preferences" element={<Preferences />} />
+          <Route path="/google-success" element={<GoogleRedirectHandler />} />
           <Route path="/thankyou" element={<ThankYou />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} /> {/* ✅ Add this line */}
