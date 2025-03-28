@@ -61,8 +61,8 @@ router.get('/google/callback',
         expiresIn: '7d',
       });
 
-      const redirectUrl = `https://swotandstudy.com/google-success?token=${token}&name=${encodeURIComponent(user.name || '')}`;
-      res.redirect(redirectUrl);
+      res.redirect(`https://swotandstudy.com/google-success?token=${token}`);
+
     } catch (error) {
       console.error("❌ Google Callback Error:", error);
       res.redirect('https://swotandstudy.com/login');
