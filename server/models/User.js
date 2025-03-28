@@ -7,4 +7,4 @@ const UserSchema = new mongoose.Schema({
   googleId: { type: String }, // Optional, for Google users
 });
 
-module.exports = mongoose.model('User', UserSchema); 
+module.exports = mongoose.model('User', UserSchema);

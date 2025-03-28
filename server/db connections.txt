@@ -33,3 +33,18 @@ AWS_REGION=us-east-1
 AWS_BUCKET_NAME=lumicare-profile-images
 
 
+
+
+GOOGLE_CLIENT_ID=519230010626-8pkd1cqu0muhoc4lr48seqtrnjk8grno.apps.googleusercontent.com519230010626-8pkd1cqu0muhoc4lr48seqtrnjk8grno.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+AWS_REGION=us-east-1
+AWS_BUCKET_NAME=lumicare-profile-images
+
+
+
+GOOGLE_CLIENT_ID=519230010626-8pkd1cqu0muhoc4lr48seqtrnjk8grno.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+
+

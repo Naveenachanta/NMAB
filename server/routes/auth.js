@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const passport = require('passport');
 
-// REGISTER
+// ✅ REGISTER
 router.post('/register', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// LOGIN
+// ✅ LOGIN
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -48,30 +48,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
-// ✅ GOOGLE AUTH START — Add These
+// ✅ GOOGLE LOGIN (optional)
 router.get('/google/callback',
-    passport.authenticate('google', {
-      failureRedirect: 'https://swotandstudy.com/login', // safer fallback
-      session: true,
-    }),
-    async (req, res) => {
-      try {
-        const user = req.user;
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: '7d',
-        });
-  
-        // redirect to frontend with token and user name (optional)
-        const redirectUrl = `https://swotandstudy.com/google-success?token=${token}&name=${encodeURIComponent(user.name || '')}`;
-        res.redirect(redirectUrl);
-      } catch (error) {
-        console.error("❌ Google Callback Error:", error);
-        res.redirect('https://swotandstudy.com/login');
-      }
+  passport.authenticate('google', {
+    failureRedirect: 'https://swotandstudy.com/login',
+    session: true,
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d',
+      });
+
+      const redirectUrl = `https://swotandstudy.com/google-success?token=${token}&name=${encodeURIComponent(user.name || '')}`;
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error("❌ Google Callback Error:", error);
+      res.redirect('https://swotandstudy.com/login');
     }
-  );
-  
-// ✅ GOOGLE AUTH END
+  }
+);
 
 module.exports = router;

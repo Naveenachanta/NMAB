@@ -163,6 +163,7 @@ const ProductCard = styled.div`
 
 // 💫 Apple-style animation components
 const Overlay = styled.div`
+display: ${({ $show }) => ($show ? 'flex' : 'none')};
   position: fixed;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.95);
@@ -269,7 +270,7 @@ const Dashboard = () => {
   return (
     <Wrapper>
       {showOverlay && (
-        <Overlay show={showOverlay}>
+        <Overlay $show={showOverlay}>
           <GreetingText>Hi, {username} 👋</GreetingText>
           <SubText>Loading your ultimate skincare experience...</SubText>
           <Spinner />

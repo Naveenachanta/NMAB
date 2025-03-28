@@ -2,21 +2,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import {
-  Wrapper,
-  ProgressBar,
-  Content,
-  HeaderRow,
-  BackArrow,
-  SkinColorOption,
-  SkinTypeOption,
-  SkinColorLabel,
-  Title,
-  FadeWrapper,
-  Question,
-  Options,
-  Option,
-  OptionWithImage,
-  NextButton
+  Wrapper, ProgressBar, Content, HeaderRow, BackArrow,
+  SkinColorOption, SkinTypeOption, SkinColorLabel,
+  Title, FadeWrapper, Question, Options, Option,
+  OptionWithImage, NextButton
 } from './Preferences.styles';
 
 const Preferences = () => {
@@ -32,16 +21,17 @@ const Preferences = () => {
   const navigate = useNavigate();
   const progress = ((questionIndex + 1) / totalSteps) * 100;
 
-  // ✅ Fetch preferences after login
+  // ✅ Fetch existing preferences
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/preferences', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await axios.get(
+          process.env.REACT_APP_API_URL + '/api/preferences',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
+        );
         const data = res.data;
         if (data) {
           setGender(data.gender || '');
@@ -53,17 +43,19 @@ const Preferences = () => {
         console.log('No existing preferences or error:', err.message);
       }
     };
-
     fetchPreferences();
   }, [token]);
 
+  // ✅ Save preferences and go to dashboard
   const handleNext = async () => {
     setShowQuestion(false);
-
+    const token = localStorage.getItem('token');
+    console.log("✅ JWT Token being sent:", token);
     if (questionIndex === totalSteps - 1) {
       try {
+        
         await axios.post(
-          'http://localhost:5001/api/preferences',
+          process.env.REACT_APP_API_URL + '/api/preferences',
           {
             gender,
             skinType,
@@ -71,19 +63,15 @@ const Preferences = () => {
             skinConcerns,
           },
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
-
         console.log('✅ Preferences saved!');
         navigate('/dashboard');
-
       } catch (error) {
         console.error('❌ Error saving preferences:', error);
         navigate('/dashboard');
-
       }
     }
 
@@ -118,114 +106,79 @@ const Preferences = () => {
           <Title>Tell us about yourself</Title>
         </HeaderRow>
 
+        {/* Step 1: Gender */}
         {questionIndex === 0 && (
           <FadeWrapper $show={showQuestion}>
             <Question>What is your gender?</Question>
             <Options>
-              <Option
-                onClick={() => setGender('male')}
-                selected={gender === 'male'}
-              >
+              <Option onClick={() => setGender('male')} selected={gender === 'male'}>
                 <img src="/images/male.png" alt="Male" />
                 <span>Male</span>
               </Option>
-              <Option
-                onClick={() => setGender('female')}
-                selected={gender === 'female'}
-              >
+              <Option onClick={() => setGender('female')} selected={gender === 'female'}>
                 <img src="/images/female.png" alt="Female" />
                 <span>Female</span>
               </Option>
             </Options>
-            <NextButton disabled={!gender} onClick={handleNext}>
-              Next
-            </NextButton>
+            <NextButton disabled={!gender} onClick={handleNext}>Next</NextButton>
           </FadeWrapper>
         )}
 
+        {/* Step 2: Skin Type */}
         {questionIndex === 1 && (
           <FadeWrapper $show={showQuestion}>
             <Question>What's your skin type?</Question>
             <Options>
-              <SkinTypeOption onClick={() => setSkinType('oily')} selected={skinType === 'oily'}>
-                <strong>Oily</strong>
-                <p>Shiny & breakout-prone.</p>
-              </SkinTypeOption>
-              <SkinTypeOption onClick={() => setSkinType('dry')} selected={skinType === 'dry'}>
-                <strong>Dry</strong>
-                <p>Tight & flaky.</p>
-              </SkinTypeOption>
-              <SkinTypeOption onClick={() => setSkinType('combination')} selected={skinType === 'combination'}>
-                <strong>Combination</strong>
-                <p>Oily & dry combo.</p>
-              </SkinTypeOption>
-              <SkinTypeOption onClick={() => setSkinType('normal')} selected={skinType === 'normal'}>
-                <strong>Normal</strong>
-                <p>Balanced & low-maintenance</p>
-              </SkinTypeOption>
+              {['oily', 'dry', 'combination', 'normal'].map((type) => (
+                <SkinTypeOption key={type} onClick={() => setSkinType(type)} selected={skinType === type}>
+                  <strong>{type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+                </SkinTypeOption>
+              ))}
             </Options>
-            <NextButton disabled={!skinType} onClick={handleNext}>
-              Next
-            </NextButton>
+            <NextButton disabled={!skinType} onClick={handleNext}>Next</NextButton>
           </FadeWrapper>
         )}
 
+        {/* Step 3: Skin Color */}
         {questionIndex === 2 && (
           <FadeWrapper $show={showQuestion}>
             <Question>What is your skin color?</Question>
             <Options>
-              {[
-                { label: 'Fair', img: '/images/skin-fair.png' },
-                { label: 'Medium', img: '/images/skin-medium.png' },
-                { label: 'Olive', img: '/images/skin-olive.png' },
-                { label: 'Deep', img: '/images/skin-deep.png' },
-              ].map((option) => (
-                <div key={option.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {['Fair', 'Medium', 'Olive', 'Deep'].map((label) => (
+                <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <SkinColorOption
-                    bg={option.img}
-                    selected={skinColor === option.label}
-                    onClick={() => setSkinColor(option.label)}
+                    bg={`/images/skin-${label.toLowerCase()}.png`}
+                    selected={skinColor === label}
+                    onClick={() => setSkinColor(label)}
                   />
-                  <SkinColorLabel>{option.label}</SkinColorLabel>
+                  <SkinColorLabel>{label}</SkinColorLabel>
                 </div>
               ))}
             </Options>
-            <NextButton disabled={!skinColor} onClick={handleNext}>
-              Next
-            </NextButton>
+            <NextButton disabled={!skinColor} onClick={handleNext}>Next</NextButton>
           </FadeWrapper>
         )}
 
-{questionIndex === 3 && (
-  <FadeWrapper $show={showQuestion}>
-    <Question>What are your main skin concerns?</Question>
-    <Options>
-  {[
-    { label: 'Acne', image: '/images/acne.png' },
-    { label: 'Dark Spots', image: '/images/darkspots.png' },
-    { label: 'Wrinkles', image: '/images/wrinkles.png' },
-    { label: 'Dryness', image: '/images/dryness.png' },
-    { label: 'Sensitivity', image: '/images/sensitivity.png' },
-    { label: 'Redness', image: '/images/redness.png' },
-  ].map((concern) => (
-    <div key={concern.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <OptionWithImage
-        selected={skinConcerns.includes(concern.label)}
-        onClick={() => toggleConcern(concern.label)}
-      >
-        <img src={concern.image} alt={concern.label} />
-      </OptionWithImage>
-      <SkinColorLabel>{concern.label}</SkinColorLabel>
-    </div>
-  ))}
-</Options>
-
-    <NextButton disabled={skinConcerns.length === 0} onClick={handleNext}>
-      Finish
-    </NextButton>
-  </FadeWrapper>
-)}
-
+        {/* Step 4: Skin Concerns */}
+        {questionIndex === 3 && (
+          <FadeWrapper $show={showQuestion}>
+            <Question>What are your main skin concerns?</Question>
+            <Options>
+              {['Acne', 'Dark Spots', 'Wrinkles', 'Dryness', 'Sensitivity', 'Redness'].map((concern) => (
+                <div key={concern} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <OptionWithImage
+                    selected={skinConcerns.includes(concern)}
+                    onClick={() => toggleConcern(concern)}
+                  >
+                    <img src={`/images/${concern.toLowerCase().replace(' ', '')}.png`} alt={concern} />
+                  </OptionWithImage>
+                  <SkinColorLabel>{concern}</SkinColorLabel>
+                </div>
+              ))}
+            </Options>
+            <NextButton disabled={skinConcerns.length === 0} onClick={handleNext}>Finish</NextButton>
+          </FadeWrapper>
+        )}
       </Content>
     </Wrapper>
   );

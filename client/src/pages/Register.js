@@ -2,18 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
-  LoginPage,
-  LoginLeft,
-  LoginRight,
-  NMABLogo,
-  Title,
-  Subtitle,
-  Form,
-  Input,
-  Button,
-  FooterText,
-  Footer,
-} from './Login.styles'; // using same styles as login
+  LoginPage, LoginLeft, LoginRight, NMABLogo,
+  Title, Subtitle, Form, Input, Button,
+  FooterText, Footer
+} from './Login.styles';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -22,12 +14,13 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://api.swotandstudy.com/api/auth/register', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        process.env.REACT_APP_API_URL + '/api/auth/register',
+        { email, password },
+        { withCredentials: true }
+      );
 
-      if (response.data && response.data.message === 'User registered') {
+      if (response.data && response.data.message === 'User created successfully') {
         alert('✅ Registration successful!');
         window.location.href = '/login';
       } else {
@@ -48,7 +41,7 @@ const Register = () => {
       <LoginRight>
         <NMABLogo>LUMICARE</NMABLogo>
         <Title>Create Your Account</Title>
-        <Subtitle>Sign up to LUMICARE to unlock access to the ultimate beauty experience </Subtitle>
+        <Subtitle>Sign up to LUMICARE to unlock access to the ultimate beauty experience</Subtitle>
 
         <Form onSubmit={handleRegister}>
           <Input
