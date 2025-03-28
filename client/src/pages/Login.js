@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import {
-  LoginPage, LoginLeft, LoginRight, NMABLogo,
+  LoginPage,GoogleButton, LoginLeft, LoginRight, NMABLogo,
   Title, Subtitle, Form, Input, Button,
   FooterText, Footer, ForgotLink
 } from './Login.styles';
@@ -96,9 +96,10 @@ const Login = () => {
           Not a member? <Link to="/register">Join Now</Link>
         </FooterText>
 
-        <a href={process.env.REACT_APP_API_URL + '/api/auth/google'}>
-          <button className="google-btn">Sign in with Google</button>
-        </a>
+        <GoogleButton href="https://api.swotandstudy.com/api/auth/google">
+  <img src="/google-icon.png" alt="Google icon" />
+  Sign in with Google
+</GoogleButton>
 
         <Footer>© {new Date().getFullYear()} NMAB. All rights reserved.</Footer>
       </LoginRight>

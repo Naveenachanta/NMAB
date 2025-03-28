@@ -157,3 +157,31 @@ export const Footer = styled.footer`
   font-size: 0.8rem;
   color: #aaa;
 `;
+export const GoogleButton = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 20px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  gap: 10px;
+
+  &:hover {
+    background: #f5f5f5;
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
