@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import productsData from '../data/products.json';
 import { Link, useNavigate } from 'react-router-dom';
-
+import AmayaChat from '../components/AmayaChat';
 const Wrapper = styled.div`
   min-height: 100vh;
   background: #fff;
@@ -268,6 +268,7 @@ const Dashboard = () => {
           </ProductCard>
         ))}
       </ProductGrid>
+      <AmayaChat />
     </Wrapper>
   );
 };

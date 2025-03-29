@@ -11,7 +11,7 @@ const billRoutes = require('./routes/bills');
 const preferenceRoutes = require('./routes/preferences');
 const profileRoutes = require('./routes/profile');
 const googleAuthRoutes = require('./routes/googleAuth');
-
+const askGptRoute = require('./routes/askGpt');
 const app = express();
 
 // ✅ Session + Passport config
@@ -25,7 +25,7 @@ app.use(passport.session());
 
 // ✅ CORS
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://swotandstudy.com'],
+  origin: ['http://localhost:5001', 'https://swotandstudy.com'],
   methods: ['GET', 'POST'],
   credentials: true,
 }));
@@ -40,6 +40,7 @@ app.use('/api/bills', billRoutes);
 app.use('/api/preferences', preferenceRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/auth', googleAuthRoutes);
+app.use('/api/ask-gpt', askGptRoute);
 
 // ✅ MongoDB
 mongoose.connect(process.env.MONGO_URI, {
