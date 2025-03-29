@@ -130,15 +130,15 @@ const AmayaChat = () => {
     const newMessages = [...messages, { type: 'user', text }];
     setMessages(newMessages);
     setInput('');
-
+  
     try {
-      const res = await axios.post('/api/ask-gpt', { prompt: text });
+      const res = await axios.post('https://api.swotandstudy.com/api/ask', { message: text });
       setMessages([...newMessages, { type: 'bot', text: res.data.reply }]);
     } catch (err) {
+      console.error(err);
       setMessages([...newMessages, { type: 'bot', text: 'Oops! Amaya is having a moment. Try again later.' }]);
     }
   };
-
   return (
     <ChatWrapper>
       {!expanded ? (
