@@ -71,35 +71,6 @@ const Logo = styled.h1`
   text-transform: uppercase;
 `;
 
-const NavRight = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-`;
-
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
-
-  &:hover {
-    color: #d60480;
-  }
-`;
-
-const LogoutButton = styled.button`
-  background: none;
-  border: none;
-  color: #000;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 1rem;
-
-  &:hover {
-    color: #d60480;
-  }
-`;
-
 const Title = styled.h1`
   text-align: center;
   font-size: 2rem;
@@ -161,9 +132,17 @@ const ProductCard = styled.div`
   }
 `;
 
-// 💫 Apple-style animation components
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const spin = keyframes`
+  to { transform: rotate(360deg); }
+`;
+
 const Overlay = styled.div`
-display: ${({ $show }) => ($show ? 'flex' : 'none')};
+  display: ${({ $show }) => ($show ? 'flex' : 'none')};
   position: fixed;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.95);
@@ -171,16 +150,10 @@ display: ${({ $show }) => ($show ? 'flex' : 'none')};
   left: 0;
   width: 100%;
   height: 100%;
-  display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: opacity 0.8s ease;
-`;
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 `;
 
 const GreetingText = styled.h1`
@@ -205,12 +178,7 @@ const Spinner = styled.div`
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  animation: spin 2s linear forwards;
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  animation: ${spin} 1s linear infinite;
 `;
 
 const categories = {
@@ -262,11 +230,6 @@ const Dashboard = () => {
     }
   }, [selectedCategory, navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   return (
     <Wrapper>
       {showOverlay && (
@@ -292,7 +255,6 @@ const Dashboard = () => {
             </NavItem>
           ))}
         </NavLeft>
-      
       </TopNav>
 
       <Title>Explore Curated Products</Title>
