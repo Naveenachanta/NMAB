@@ -132,7 +132,7 @@ const AmayaChat = () => {
   const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [userImage, setUserImage] = useState("/default-avatar.png");
+  const [userImage, setUserImage] = useState('/default-avatar.png');
   const messagesRef = useRef(null);
 
   const prompts = [
@@ -142,31 +142,32 @@ const AmayaChat = () => {
     'What product helps with dark spots?'
   ];
 
-  const botImage = "/amaya-avatar.png";
+  const botImage = "/amaya-avatar.png"; // Ensure this is in public folder
 
   useEffect(() => {
-    const savedImage = localStorage.getItem("profileImage");
-    if (savedImage) {
-      setUserImage(savedImage);
-    } else {
+    const fetchProfileImage = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      axios.get("https://api.swotandstudy.com/api/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const image = res.data.profileImage;
-        if (image) {
-          localStorage.setItem("profileImage", image);
-          setUserImage(image);
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (res.data.profileImage) {
+          localStorage.setItem("profileImage", res.data.profileImage);
+          setUserImage(res.data.profileImage);
         }
-      })
-      .catch((err) => {
-        console.error("AmayaChat: Failed to load profile image", err);
-      });
+      } catch (err) {
+        console.error("Failed to fetch profile image:", err);
+      }
+    };
+
+    const cached = localStorage.getItem("profileImage");
+    if (cached && cached !== '/default-avatar.png') {
+      setUserImage(cached);
+    } else {
+      fetchProfileImage();
     }
   }, []);
 
