@@ -155,7 +155,7 @@ const AmayaChat = () => {
         });
 
         if (res.data.profileImage) {
-          localStorage.setItem("profileImage", res.data.profileImage);
+          localStorage.setItem("profileImage", res.data.profilePic);
           setUserImage(res.data.profileImage);
         }
       } catch (err) {
