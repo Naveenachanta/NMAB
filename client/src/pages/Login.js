@@ -29,6 +29,13 @@ const Login = () => {
       if (response.data && response.data.token) {
         const token = response.data.token;
         localStorage.setItem('token', token);
+        try {
+          const decoded = JSON.parse(atob(token.split('.')[1]));
+          localStorage.setItem("profileImage", decoded.image || "/default-avatar.png");
+        } catch (err) {
+          localStorage.setItem("profileImage", "/default-avatar.png");
+        }
+      
 
         try {
           const prefRes = await axios.get(

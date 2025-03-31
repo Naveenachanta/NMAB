@@ -103,15 +103,35 @@ const Prompt = styled.div`
   }
 `;
 
-const MessageBubble = styled.div`
-  background: ${({ type }) => (type === 'user' ? '#f1f1f1' : '#eee')};
-  color: #333;
-  padding: 10px 14px;
-  border-radius: 12px;
+export const MessageBubble = styled.div`
+  display: flex;
+  align-items: flex-start;
   margin-bottom: 10px;
-  align-self: ${({ type }) => (type === 'user' ? 'flex-end' : 'flex-start')};
-  max-width: 80%;
+
+  .chat-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+  }
+
+  .user-avatar {
+    border: 2px solid #000;
+  }
+
+  .bot-avatar {
+    border: 2px solid #ff0077;
+  }
+
+  span {
+    background-color: #f2f2f2;
+    padding: 10px 15px;
+    border-radius: 20px;
+    max-width: 80%;
+  }
 `;
+
 
 const AmayaChat = () => {
   const [expanded, setExpanded] = useState(false);
@@ -155,8 +175,25 @@ const AmayaChat = () => {
               </PromptBox>
             )}
             {messages.map((msg, i) => (
-              <MessageBubble key={i} type={msg.type}>{msg.text}</MessageBubble>
-            ))}
+  <MessageBubble key={i} type={msg.type}>
+    {msg.type === 'user' && (
+      <img
+        src={localStorage.getItem("profileImage") || "/default-avatar.png"}
+        alt="User"
+        className="chat-avatar user-avatar"
+      />
+    )}
+    {msg.type === 'bot' && (
+      <img
+        src="/bot-avatar.png"
+        alt="Amaya"
+        className="chat-avatar bot-avatar"
+      />
+    )}
+    <span>{msg.text}</span>
+  </MessageBubble>
+))}
+
           </Messages>
           <InputWrapper>
             <Input
