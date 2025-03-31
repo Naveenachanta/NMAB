@@ -132,7 +132,7 @@ const AmayaChat = () => {
   const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [userImage, setUserImage] = useState('/default-avatar.png');
+  const [userImage, setUserImage] = useState("/default-avatar.png");
   const messagesRef = useRef(null);
 
   const prompts = [
@@ -142,12 +142,31 @@ const AmayaChat = () => {
     'What product helps with dark spots?'
   ];
 
-  const botImage = '/amaya-avatar.png'; // Add this in public folder
+  const botImage = "/amaya-avatar.png";
 
   useEffect(() => {
-    const image = localStorage.getItem('profileImage');
-    if (image && image.startsWith('http')) {
-      setUserImage(image);
+    const savedImage = localStorage.getItem("profileImage");
+    if (savedImage) {
+      setUserImage(savedImage);
+    } else {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      axios.get("https://api.swotandstudy.com/api/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const image = res.data.profileImage;
+        if (image) {
+          localStorage.setItem("profileImage", image);
+          setUserImage(image);
+        }
+      })
+      .catch((err) => {
+        console.error("AmayaChat: Failed to load profile image", err);
+      });
     }
   }, []);
 
