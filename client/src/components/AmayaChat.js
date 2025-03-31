@@ -154,16 +154,16 @@ const AmayaChat = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (res.data.profileImage) {
-          localStorage.setItem("profileImage", res.data.profilePic);
-          setUserImage(res.data.profileImage);
+        if (res.data.profilePic) {
+          localStorage.setItem("profilePic", res.data.profilePic);
+          setUserImage(res.data.profilePic);
         }
       } catch (err) {
         console.error("Failed to fetch profile image:", err);
       }
     };
 
-    const cached = localStorage.getItem("profileImage");
+    const cached = localStorage.getItem("profilePic");
     if (cached && cached !== '/default-avatar.png') {
       setUserImage(cached);
     } else {
