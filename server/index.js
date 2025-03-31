@@ -25,7 +25,7 @@ app.use(passport.session());
 
 // ✅ CORS
 app.use(cors({
-  origin: ['http://localhost:5001', 'https://swotandstudy.com'],
+  origin: ['http://localhost:3000', 'https://swotandstudy.com'],
   methods: ['GET', 'POST'],
   credentials: true,
 }));
