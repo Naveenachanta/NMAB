@@ -132,7 +132,7 @@ const AmayaChat = () => {
     setInput('');
   
     try {
-      const res = await axios.post('https://api.swotandstudy.com/api/ask', { message: text });
+      const res = await axios.post('https://api.swotandstudy.com/api/ask', { message: input });
       setMessages([...newMessages, { type: 'bot', text: res.data.reply }]);
     } catch (err) {
       console.error(err);
