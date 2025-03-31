@@ -148,28 +148,27 @@ const AmayaChat = () => {
     const fetchProfileImage = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-
+  
       try {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
         });
-
+  
         if (res.data.profilePic) {
-          localStorage.setItem("profilePic", res.data.profilePic);
-          setUserImage(res.data.profilePic);
+          const latestImage = res.data.profilePic;
+          localStorage.setItem("profilePic", latestImage);
+          setUserImage(latestImage);
         }
       } catch (err) {
         console.error("Failed to fetch profile image:", err);
       }
     };
-
-    const cached = localStorage.getItem("profilePic");
-    if (cached && cached !== '/default-avatar.png') {
-      setUserImage(cached);
-    } else {
-      fetchProfileImage();
-    }
+  
+    fetchProfileImage(); // Always fetch latest
+  
   }, []);
+  
 
   useEffect(() => {
     if (messagesRef.current) {
