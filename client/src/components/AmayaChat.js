@@ -44,6 +44,22 @@ const ChatBox = styled.div`
     to { opacity: 1; transform: scale(1); }
   }
 `;
+export const InputWithAvatar = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const ChatUserAvatar = styled.img`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+`;
 
 const Header = styled.div`
   background: #d60480;
@@ -65,13 +81,15 @@ const InputWrapper = styled.div`
   border-top: 1px solid #eee;
 `;
 
-const Input = styled.input`
-  flex: 1;
-  padding: 0.8rem;
+ const Input = styled.input`
+  padding: 12px 40px 12px 16px;
+  width: 100%;
   border: none;
+  border-radius: 20px;
+  font-size: 14px;
   outline: none;
-  font-size: 0.95rem;
 `;
+
 
 const SendButton = styled.button`
   background: #d60480;
@@ -176,13 +194,14 @@ const AmayaChat = () => {
             )}
             {messages.map((msg, i) => (
   <MessageBubble key={i} type={msg.type}>
-    {msg.type === 'user' && (
-      <img
-        src={localStorage.getItem("profileImage") || "/default-avatar.png"}
-        alt="User"
-        className="chat-avatar user-avatar"
-      />
-    )}
+  {msg.type === 'user' && (
+  <img
+    src={localStorage.getItem("profileImage") || "/default-avatar.png"}
+    alt="User"
+    className="chat-avatar user-avatar"
+  />
+)}
+
     {msg.type === 'bot' && (
       <img
         src="/bot-avatar.png"
@@ -196,14 +215,21 @@ const AmayaChat = () => {
 
           </Messages>
           <InputWrapper>
-            <Input
-              placeholder="Ask me anything..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
-            />
-            <SendButton onClick={() => sendMessage(input)}>→</SendButton>
-          </InputWrapper>
+  <InputWithAvatar>
+    <Input
+      placeholder="Ask me anything..."
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
+    />
+    <ChatUserAvatar
+      src={localStorage.getItem("profileImage") || "/default-avatar.png"}
+      alt="User Avatar"
+    />
+  </InputWithAvatar>
+  <SendButton onClick={() => sendMessage(input)}>→</SendButton>
+</InputWrapper>
+
         </ChatBox>
       )}
     </ChatWrapper>
