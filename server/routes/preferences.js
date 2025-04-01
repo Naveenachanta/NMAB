@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router(); // ✅ This was missing
 const Preference = require('../models/Preference');
-const authenticate = require('../middleware/authMiddleware'); // ⬅️ JWT check
+const { authenticate } = require('../middleware/authMiddleware');
 const mongoose = require('mongoose');
 // GET preferences for logged-in user
 router.get('/', authenticate, async (req, res) => {

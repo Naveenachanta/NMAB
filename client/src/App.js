@@ -8,7 +8,7 @@ import ThankYou from './pages/ThankYou';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import GoogleRedirectHandler from './pages/GoogleRedirectHandler';
-
+import Admin from './pages/Admin';
 function App() {
   return (
     <Router>
@@ -22,6 +22,7 @@ function App() {
           <Route path="/thankyou" element={<ThankYou />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} /> {/* ✅ Add this line */}
+          <Route path="/admin" element={<Admin />} />
         </Route>
       </Routes>
     </Router>

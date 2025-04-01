@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
+// ✅ Styled Components (NO CHANGE in styling)
 const ChatWrapper = styled.div`
   position: fixed;
   bottom: 30px;
   right: 30px;
   z-index: 1000;
-  font-family: 'Helvetica Neue', sans-serif;
 `;
 
 const ChatBubble = styled.div`
@@ -16,12 +16,12 @@ const ChatBubble = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   transition: all 0.3s ease;
 
   &:hover {
@@ -30,38 +30,42 @@ const ChatBubble = styled.div`
 `;
 
 const ChatBox = styled.div`
-  width: 380px;
-  max-height: 550px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  width: 360px;
+  max-height: 500px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeIn 0.3s ease;
+  animation: popIn 0.3s ease;
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
 `;
 
 const Header = styled.div`
   background: #000;
   color: white;
   padding: 1rem;
+  font-weight: bold;
   font-size: 1.1rem;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
+  position: relative;
 `;
 
-const CloseBtn = styled.button`
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
+const CloseBtn = styled.div`
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 1.1rem;
   color: white;
   cursor: pointer;
-  opacity: 0.7;
 
   &:hover {
-    opacity: 1;
+    opacity: 0.8;
   }
 `;
 
@@ -77,18 +81,16 @@ const Messages = styled.div`
 const InputWrapper = styled.div`
   display: flex;
   border-top: 1px solid #eee;
-  padding: 0.8rem;
+  padding: 0.6rem;
   align-items: center;
-  background-color: #fafafa;
 `;
 
 const Input = styled.input`
   flex: 1;
-  padding: 0.6rem 0.9rem;
+  padding: 0.6rem 0.8rem;
   border: none;
   outline: none;
   font-size: 0.95rem;
-  background: transparent;
 `;
 
 const SendButton = styled.button`
@@ -98,29 +100,23 @@ const SendButton = styled.button`
   padding: 0.5rem 1rem;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 8px;
-  transition: 0.2s ease;
-
-  &:hover {
-    background: #333;
-  }
+  margin-left: 8px;
 `;
 
 const PromptBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 1rem;
 `;
 
 const Prompt = styled.div`
-  background: #f1f1f1;
+  background: #f3f3f3;
   color: #333;
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.2s ease;
 
   &:hover {
     background: #000;
@@ -129,24 +125,26 @@ const Prompt = styled.div`
 `;
 
 const MessageBubble = styled.div`
-  background: ${({ type }) => (type === 'user' ? '#f2f2f2' : '#eaeaea')};
+  background: ${({ type }) => (type === 'user' ? '#f1f1f1' : '#eee')};
   color: #333;
-  padding: 12px 16px;
-  border-radius: 14px;
-  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 80%;
   align-self: ${({ type }) => (type === 'user' ? 'flex-end' : 'flex-start')};
   display: flex;
   align-items: flex-end;
-  gap: 10px;
+  gap: 8px;
 `;
 
 const Avatar = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   object-fit: cover;
 `;
 
+
+// ✅ Main Component
 const AmayaChat = () => {
   const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -161,11 +159,11 @@ const AmayaChat = () => {
     'What product helps with dark spots?'
   ];
 
-  const botImage = '/amaya-avatar.png';
+  const botImage = "/amaya-avatar.png"; // ✅ Add to public folder
 
   useEffect(() => {
     const fetchProfileImage = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) return;
 
       try {
@@ -174,20 +172,20 @@ const AmayaChat = () => {
         });
 
         if (res.data.profilePic) {
-          localStorage.setItem('profilePic', res.data.profilePic);
+          localStorage.setItem("profilePic", res.data.profilePic);
           setUserImage(res.data.profilePic);
         }
       } catch (err) {
-        console.error('Failed to fetch profile image:', err);
+        console.error("⚠️ Failed to fetch profile image:", err);
       }
     };
 
-    const cached = localStorage.getItem('profilePic');
+    const cached = localStorage.getItem("profilePic");
     if (cached && cached !== '/default-avatar.png') {
       setUserImage(cached);
-    } else {
-      fetchProfileImage();
     }
+
+    fetchProfileImage(); // Always call to stay updated
   }, []);
 
   useEffect(() => {
@@ -229,6 +227,7 @@ const AmayaChat = () => {
                 ))}
               </PromptBox>
             )}
+
             {messages.map((msg, i) => (
               <MessageBubble key={i} type={msg.type}>
                 {msg.type === 'bot' ? (

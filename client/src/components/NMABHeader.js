@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { jwtDecode } from 'jwt-decode';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -112,9 +113,26 @@ const LogoutButton = styled.button`
 
 const NMABHeader = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded =  jwtDecode(token);
+        if (decoded.role === 'admin') {
+          setIsAdmin(true);
+        }
+      } catch (err) {
+        console.error("Invalid token:", err);
+      }
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("profileImage");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -127,10 +145,10 @@ const NMABHeader = () => {
       <Right>
         <NavLink to="/dashboard">Home</NavLink>
         <NavLink to="/profile">Profile</NavLink>
+        {isAdmin && <NavLink to="/admin">Admin</NavLink>} {/* ✅ Conditionally show */}
         <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
       </Right>
     </HeaderWrapper>
   );
 };
-
 export default NMABHeader;
