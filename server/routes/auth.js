@@ -42,6 +42,7 @@ router.post('/login', async (req, res) => {
         id: user._id,
         email: user.email,
         name: user.name,
+        role: user.role,
         image: user.profileImage || user.image, // ✅ Prefer uploaded > Google > fallback
       },
       process.env.JWT_SECRET,
