@@ -22,7 +22,7 @@ router.post(
         description,
         category,
         tags: tags.split(',').map(tag => tag.trim()),
-        imageUrl, // ✅ FIXED: this is the field your frontend expects
+        image: imageUrl, // ✅ FIXED: this is the field your frontend expects
       });
 
       await product.save();
