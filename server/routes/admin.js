@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../utils/uploadS3'); // uses your S3 utility
+const upload = require('../utils/uploadS3');
 const { authenticate, requireAdmin } = require('../middleware/authMiddleware');
-const Product = require('../models/Product'); // your product model
+const Product = require('../models/Product');
 
-// ✅ POST /api/admin/upload-product
 router.post(
   '/upload-product',
   authenticate,
@@ -20,7 +19,7 @@ router.post(
         description,
         category,
         tags: tags.split(',').map(tag => tag.trim()),
-        imageUrl,
+        image: imageUrl, // ✅ FIXED: this is the field your frontend expects
       });
 
       await product.save();
