@@ -1,3 +1,4 @@
+// server/utils/uploadS3.js
 const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
@@ -10,7 +11,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-const upload = (type = 'profile') =>
+const upload = (folder) =>
   multer({
     storage: multerS3({
       s3,
@@ -20,7 +21,7 @@ const upload = (type = 'profile') =>
         cb(null, { fieldName: file.fieldname });
       },
       key: (req, file, cb) => {
-        const filename = `${folderName}/${Date.now()}-${file.originalname}`;
+        const fileName = `${folder}-${Date.now()}-${file.originalname}`;
         cb(null, fileName);
       },
     }),

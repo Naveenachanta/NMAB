@@ -63,10 +63,11 @@ const Admin = () => {
   });
 
   const handleChange = (e) => {
-    if (e.target.name === 'image') {
-      setProduct({ ...product, image: e.target.files[0] });
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+      setProduct({ ...product, image: files[0] });
     } else {
-      setProduct({ ...product, [e.target.name]: e.target.value });
+      setProduct({ ...product, [name]: value });
     }
   };
 
@@ -74,9 +75,11 @@ const Admin = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    Object.entries(product).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    formData.append('name', product.name);
+    formData.append('description', product.description);
+    formData.append('category', product.category);
+    formData.append('tags', product.tags);
+    formData.append('image', product.image); // ✅ Correct way
 
     try {
       const token = localStorage.getItem('token');
@@ -86,7 +89,8 @@ const Admin = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert("Product uploaded successfully");
+
+      alert('✅ Product uploaded successfully');
       setProduct({
         name: '',
         description: '',
@@ -96,7 +100,7 @@ const Admin = () => {
       });
     } catch (err) {
       console.error(err);
-      alert("Error uploading product");
+      alert('❌ Error uploading product');
     }
   };
 
