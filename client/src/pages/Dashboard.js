@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
-import productsData from '../data/products.json';
 import { Link, useNavigate } from 'react-router-dom';
 import AmayaChat from '../components/AmayaChat';
+
+
 const Wrapper = styled.div`
   min-height: 100vh;
   background: #fff;
@@ -211,23 +213,17 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    const preferences = JSON.parse(localStorage.getItem('preferences')) || {
-      skinType: 'dry',
-      skinConcerns: ['Wrinkles']
-    };
+    const fetchProducts = async () => {
+        try {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
+          const data = response.data;
+          setFilteredProducts(data);
+        } catch (err) {
+          console.error('Error fetching products:', err);
+        }
+      };
 
-    const matchTags = [preferences.skinType, ...(preferences.skinConcerns || [])];
-    const matches = productsData.filter(product => {
-      const matchesPrefs = product.tags?.some(tag => matchTags.includes(tag));
-      const matchesCategory = selectedCategory === 'All' || product.subcategory === selectedCategory;
-      return matchesPrefs && matchesCategory;
-    });
-
-    setFilteredProducts(matches);
-
-    if (selectedCategory !== 'All' && matches.length === 0) {
-      navigate('/thankyou');
-    }
+    fetchProducts();
   }, [selectedCategory, navigate]);
 
   return (
@@ -260,13 +256,16 @@ const Dashboard = () => {
       <Title>Explore Curated Products</Title>
       <ProductGrid>
         {filteredProducts.map(product => (
-          <ProductCard key={product.id}>
-            <img src={product.image} alt={product.name} />
+          <ProductCard key={product._id}>
+            <img src={product.imageUrl} alt={product.name} />
             <h3>{product.name}</h3>
             <div className="tags">{product.tags?.join(', ')}</div>
             {product.tags?.length > 1 && <div className="badge">Recommended</div>}
           </ProductCard>
         ))}
+        {filteredProducts.length === 0 && (
+          <p>No products found for this category.</p>
+        )}
       </ProductGrid>
       <AmayaChat />
     </Wrapper>
