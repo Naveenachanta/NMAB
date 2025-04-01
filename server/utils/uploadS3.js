@@ -20,7 +20,7 @@ const upload = (type = 'profile') =>
         cb(null, { fieldName: file.fieldname });
       },
       key: (req, file, cb) => {
-        const fileName = `${type}-${Date.now().toString()}-${file.originalname}`;
+        const filename = `${folderName}/${Date.now()}-${file.originalname}`;
         cb(null, fileName);
       },
     }),
