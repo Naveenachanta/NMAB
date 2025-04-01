@@ -257,7 +257,7 @@ const Dashboard = () => {
       <ProductGrid>
         {filteredProducts.map(product => (
           <ProductCard key={product._id}>
-            <img src={product.imageUrl} alt={product.name} />
+            <img src={product.image} alt={product.name} />
             <h3>{product.name}</h3>
             <div className="tags">{product.tags?.join(', ')}</div>
             {product.tags?.length > 1 && <div className="badge">Recommended</div>}
