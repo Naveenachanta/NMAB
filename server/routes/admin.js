@@ -11,15 +11,18 @@ router.post(
   upload('product').single('image'),
   async (req, res) => {
     try {
+        console.log('FILE:', req.file); 
       const imageUrl = req.file.location;
       const { name, description, category, tags } = req.body;
-
+      if (!imageUrl) {
+        return res.status(400).json({ message: 'Image upload failed' });
+      }
       const product = new Product({
         name,
         description,
         category,
         tags: tags.split(',').map(tag => tag.trim()),
-        image: imageUrl, // ✅ FIXED: this is the field your frontend expects
+        imageUrl, // ✅ FIXED: this is the field your frontend expects
       });
 
       await product.save();
