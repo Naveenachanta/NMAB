@@ -14,6 +14,7 @@ const googleAuthRoutes = require('./routes/googleAuth');
 const askGptRoute = require('./routes/askGpt');
 const productRoutes = require('./routes/productRoutes');
 const adminroutes = require('./routes/admin');
+const newsletterRoutes = require('./routes/newsletter');
 const app = express();
 
 // ✅ Session + Passport config
@@ -45,6 +46,7 @@ app.use('/api/auth', googleAuthRoutes);
 app.use('/api/ask-gpt', askGptRoute);
 app.use('/api/admin', adminroutes);
 app.use('/api/products', productRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 // ✅ MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,

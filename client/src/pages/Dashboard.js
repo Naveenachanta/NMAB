@@ -4,14 +4,8 @@ import axios from 'axios';
 import AmayaChat from '../components/AmayaChat';
 
 const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 const DashboardWrapper = styled.div`
@@ -67,8 +61,10 @@ const SubTitle = styled.p`
   margin: 0 auto;
 `;
 
+// 🛍️ PRODUCTS SECTION
 const ProductSection = styled.section`
   padding: 4rem 2rem;
+  position: relative;
 `;
 
 const SectionHeading = styled.h2`
@@ -77,86 +73,156 @@ const SectionHeading = styled.h2`
   text-align: center;
 `;
 
-const ProductGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
+const ScrollContainer = styled.div`
+  position: relative;
+  padding: 0 2.5rem;
+`;
+
+const ScrollWrapper = styled.div`
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 3rem;
+  padding: 0 1rem;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ProductCard = styled.div`
-  background: #111;
-  border-radius: 12px;
-  padding: 1rem;
+  flex: 0 0 260px;
+  scroll-snap-align: center;
   text-align: center;
   color: white;
-  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const ProductImage = styled.img`
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+  &:hover {
+    transform: scale(1.04);
+  }
+`;
+
+const ProductName = styled.h3`
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+`;
+
+const ProductStatus = styled.p`
+  color: #bbb;
+  font-size: 0.9rem;
+  margin-top: -0.2rem;
+`;
+
+const ArrowBase = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  opacity: 0.85;
+  border: 1px solid rgba(255,255,255,0.15);
 
   &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.08);
-  }
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    margin-bottom: 0.5rem;
-  }
-
-  .price {
-    font-size: 1rem;
-    color: #aaa;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
   }
 `;
 
+const LeftArrow = styled(ArrowBase)`
+  left: 0;
+`;
+
+const RightArrow = styled(ArrowBase)`
+  right: 0;
+`;
+
+// 🖼️ BANNER SECTION
 const BannerSection = styled.div`
-  position: relative;
-  margin-top: 4rem;
-  height: 420px;
+  display: flex;
+  margin-top: 5rem;
+  height: 520px;
   overflow: hidden;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
 `;
 
-const ZoomableImage = styled.div`
-  width: 100%;
+const BannerImage = styled.div`
+  flex: 1;
   height: 100%;
   background-image: url('/shop_banner.jpg');
   background-size: cover;
   background-position: center;
   transform: ${({ zoom }) => `scale(${zoom})`};
-  transition: transform 0.3s ease-out;
+  transition: transform 0.2s ease-out;
 `;
 
-const BannerOverlay = styled.div`
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  font-family: 'Didot', serif;
-  z-index: 2;
+const BannerContent = styled.div`
+  flex: 1;
+  padding-left: 3rem;
+  padding-right: 2rem;
 `;
 
 const BannerTitle = styled.h2`
-  font-size: 2.4rem;
+  font-size: 2.5rem;
   letter-spacing: 0.15rem;
+  font-weight: 500;
 `;
 
 const BannerDescription = styled.p`
   font-size: 1rem;
-  margin-top: 0.5rem;
   color: #ccc;
+  margin: 1rem 0 2rem;
+  line-height: 1.6;
 `;
 
+const ExploreButton = styled.button`
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 0.7rem 1.6rem;
+  border-radius: 30px;
+  font-family: 'Didot', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: white;
+    color: black;
+  }
+`;
+
+// MAIN COMPONENT
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [zoom, setZoom] = useState(1);
-  const bannerRef = useRef();
+  const scrollRef = useRef();
+  const lastScrollY = useRef(window.scrollY);
 
   useEffect(() => {
     const fetch = async () => {
@@ -167,28 +233,28 @@ const Dashboard = () => {
         console.error('Error fetching products:', err);
       }
     };
-
     fetch();
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (bannerRef.current) {
-        const rect = bannerRef.current.getBoundingClientRect();
-        const scrollY = window.scrollY;
-        const offsetTop = rect.top + scrollY;
-        const windowHeight = window.innerHeight;
-
-        const distance = Math.max(0, scrollY - offsetTop + windowHeight / 2);
-        const zoomFactor = 1 + Math.min(distance / 1000, 0.2); // Zoom up to 1.2x
-
-        setZoom(zoomFactor);
-      }
+      const currentY = window.scrollY;
+      const direction = currentY < lastScrollY.current ? 'up' : 'down';
+      const zoomChange = direction === 'up' ? 0.01 : -0.01;
+      setZoom((prevZoom) => Math.max(0.95, Math.min(1.15, prevZoom + zoomChange)));
+      lastScrollY.current = currentY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scroll = (dir) => {
+    if (scrollRef.current) {
+      const amount = dir === 'left' ? -300 : 300;
+      scrollRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  };
 
   return (
     <DashboardWrapper>
@@ -209,23 +275,34 @@ const Dashboard = () => {
 
       <ProductSection>
         <SectionHeading>Our Featured Products</SectionHeading>
-        <ProductGrid>
-          {products.map((product) => (
-            <ProductCard key={product._id}>
-              <img src={product.image} alt={product.name} />
-              <h3>{product.name}</h3>
-              <p className="price">{product.price ? `$${product.price}` : 'Coming soon'}</p>
-            </ProductCard>
-          ))}
-        </ProductGrid>
+        <ScrollContainer>
+          <ScrollWrapper ref={scrollRef}>
+            {products.map((product) => (
+              <ProductCard key={product._id}>
+                <ProductImage src={product.image} alt={product.name} />
+                <ProductName>{product.name}</ProductName>
+                <ProductStatus>{product.price ? `$${product.price}` : 'Coming soon'}</ProductStatus>
+              </ProductCard>
+            ))}
+          </ScrollWrapper>
+          {products.length > 3 && (
+            <>
+              <LeftArrow onClick={() => scroll('left')}>&lt;</LeftArrow>
+              <RightArrow onClick={() => scroll('right')}>&gt;</RightArrow>
+            </>
+          )}
+        </ScrollContainer>
       </ProductSection>
 
-      <BannerSection ref={bannerRef}>
-        <ZoomableImage zoom={zoom} />
-        <BannerOverlay>
-          <BannerDescription>Premium skincare, thoughtfully curated for you</BannerDescription>
-          <BannerTitle>Shop The Collection</BannerTitle>
-        </BannerOverlay>
+      <BannerSection>
+        <BannerImage zoom={zoom} />
+        <BannerContent>
+          <BannerTitle>SHOP THE COLLECTION</BannerTitle>
+          <BannerDescription>
+            Premium skincare, thoughtfully curated for you. Explore our seasonal essentials designed for every skin type.
+          </BannerDescription>
+          <ExploreButton>Explore Now</ExploreButton>
+        </BannerContent>
       </BannerSection>
 
       <AmayaChat />
