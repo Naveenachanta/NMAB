@@ -18,6 +18,10 @@ const Header = styled.header`
   align-items: center;
   height: 72px;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const Logo = styled.div`
@@ -28,6 +32,10 @@ const Logo = styled.div`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const RightIcons = styled.div`
@@ -92,7 +100,7 @@ const NMBAHeader = () => {
             <IconWrapper><User size={20} /></IconWrapper>
             <DropdownWrapper className="dropdown">
               <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
-              <DropdownItem onClick={() => navigate('/Admin')}>Admin</DropdownItem>
+              <DropdownItem onClick={() => navigate('/admin')}>Admin</DropdownItem>
               <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
             </DropdownWrapper>
           </ProfileContainer>

@@ -168,6 +168,13 @@ const BannerSection = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 5%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
 `;
 
 const BannerImage = styled.div`
@@ -178,18 +185,33 @@ const BannerImage = styled.div`
   background-position: center;
   transform: ${({ zoom }) => `scale(${zoom})`};
   transition: transform 0.2s ease-out;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 320px;
+    border-radius: 12px;
+  }
 `;
 
 const BannerContent = styled.div`
   flex: 1;
   padding-left: 3rem;
   padding-right: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+    text-align: center;
+  }
 `;
 
 const BannerTitle = styled.h2`
   font-size: 2.5rem;
   letter-spacing: 0.15rem;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const BannerDescription = styled.p`
@@ -217,7 +239,6 @@ const ExploreButton = styled.button`
   }
 `;
 
-// MAIN COMPONENT
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [zoom, setZoom] = useState(1);
