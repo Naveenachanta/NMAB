@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, List, MagnifyingGlass, Heart } from 'phosphor-react';
+import { User, ShoppingBag, List, MagnifyingGlass } from 'phosphor-react';
 import { FiMenu } from 'react-icons/fi';
 
 const HeaderContainer = styled.div`
@@ -121,10 +121,8 @@ const NMBAHeader = () => {
 
         {/* Right icons */}
         <RightIcons>
-          <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
-          <IconWrapper><Heart size={20} /></IconWrapper>
-          <IconWrapper><ShoppingBag size={20} /></IconWrapper>
-          <ProfileContainer>
+        <IconWrapper><ShoppingBag size={20} /></IconWrapper>
+        <ProfileContainer>
             <IconWrapper><User size={20} /></IconWrapper>
             <DropdownWrapper className="dropdown">
               <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
@@ -132,6 +130,8 @@ const NMBAHeader = () => {
               <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
             </DropdownWrapper>
           </ProfileContainer>
+          <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
+          
           <IconWrapper><List size={20} /></IconWrapper>
         </RightIcons>
       </Header>
