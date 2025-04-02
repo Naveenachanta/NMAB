@@ -1,26 +1,43 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, List, MagnifyingGlass } from 'phosphor-react';
+import { User, ShoppingBag, List, MagnifyingGlass, Heart } from 'phosphor-react';
+import { FiMenu } from 'react-icons/fi';
 
 const HeaderContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 1000;
   background: black;
+  width: 100%;
 `;
 
 const Header = styled.header`
   color: white;
   padding: 1.2rem 2rem;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: space-between;
   height: 72px;
-  position: relative;
 
   @media (max-width: 768px) {
-    padding: 1rem;
+    padding: 1rem 1.2rem;
+  }
+`;
+
+const LeftSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const MenuIcon = styled.div`
+  display: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
@@ -29,12 +46,15 @@ const Logo = styled.div`
   font-size: 1.8rem;
   letter-spacing: 0.3rem;
   cursor: pointer;
+
+  // Default: center for desktop
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 
   @media (max-width: 768px) {
-    font-size: 1.4rem;
+    position: static;
+    transform: none;
   }
 `;
 
@@ -42,6 +62,10 @@ const RightIcons = styled.div`
   display: flex;
   gap: 1.6rem;
   align-items: center;
+
+  @media (max-width: 768px) {
+    gap: 1.2rem;
+  }
 `;
 
 const IconWrapper = styled.div`
@@ -89,13 +113,17 @@ const NMBAHeader = () => {
   return (
     <HeaderContainer>
       <Header>
-        <Logo onClick={() => navigate('/dashboard')}>LUMICARE</Logo>
+        {/* Left section: Menu + Logo */}
+        <LeftSection>
+          <MenuIcon><FiMenu /></MenuIcon>
+          <Logo onClick={() => navigate('/dashboard')}>LUMICARE</Logo>
+        </LeftSection>
 
+        {/* Right icons */}
         <RightIcons>
           <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
+          <IconWrapper><Heart size={20} /></IconWrapper>
           <IconWrapper><ShoppingBag size={20} /></IconWrapper>
-          <IconWrapper><List size={20} /></IconWrapper>
-
           <ProfileContainer>
             <IconWrapper><User size={20} /></IconWrapper>
             <DropdownWrapper className="dropdown">
@@ -104,6 +132,7 @@ const NMBAHeader = () => {
               <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
             </DropdownWrapper>
           </ProfileContainer>
+          <IconWrapper><List size={20} /></IconWrapper>
         </RightIcons>
       </Header>
     </HeaderContainer>
