@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, List, MagnifyingGlass } from 'phosphor-react';
+import { User, ShoppingBag, MagnifyingGlass } from 'phosphor-react';
 import { FiMenu } from 'react-icons/fi';
 
 const HeaderContainer = styled.div`
@@ -19,25 +19,10 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   height: 72px;
+  position: relative;
 
   @media (max-width: 768px) {
     padding: 1rem 1.2rem;
-  }
-`;
-
-const LeftSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const MenuIcon = styled.div`
-  display: none;
-  font-size: 1.6rem;
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    display: block;
   }
 `;
 
@@ -47,7 +32,6 @@ const Logo = styled.div`
   letter-spacing: 0.3rem;
   cursor: pointer;
 
-  // Default: center for desktop
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -55,6 +39,7 @@ const Logo = styled.div`
   @media (max-width: 768px) {
     position: static;
     transform: none;
+    margin-right: auto;
   }
 `;
 
@@ -62,6 +47,7 @@ const RightIcons = styled.div`
   display: flex;
   gap: 1.6rem;
   align-items: center;
+  margin-left: auto;
 
   @media (max-width: 768px) {
     gap: 1.2rem;
@@ -113,16 +99,15 @@ const NMBAHeader = () => {
   return (
     <HeaderContainer>
       <Header>
-        {/* Left section: Menu + Logo */}
-        <LeftSection>
-          <MenuIcon><FiMenu /></MenuIcon>
-          <Logo onClick={() => navigate('/dashboard')}>LUMICARE</Logo>
-        </LeftSection>
+        {/* 🖋️ Logo */}
+        <Logo onClick={() => navigate('/dashboard')}>LUMICARE</Logo>
 
-        {/* Right icons */}
+        {/* ✅ All icons always on right */}
         <RightIcons>
-        <IconWrapper><ShoppingBag size={20} /></IconWrapper>
-        <ProfileContainer>
+          <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
+          <IconWrapper><ShoppingBag size={20} /></IconWrapper>
+
+          <ProfileContainer>
             <IconWrapper><User size={20} /></IconWrapper>
             <DropdownWrapper className="dropdown">
               <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
@@ -130,9 +115,8 @@ const NMBAHeader = () => {
               <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
             </DropdownWrapper>
           </ProfileContainer>
-          <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
-          
-          <IconWrapper><List size={20} /></IconWrapper>
+
+          <IconWrapper><FiMenu size={20} /></IconWrapper>
         </RightIcons>
       </Header>
     </HeaderContainer>

@@ -15,11 +15,16 @@ const DashboardWrapper = styled.div`
   overflow-x: hidden;
 `;
 
+/* ------------------ VIDEO SECTION ------------------ */
 const VideoSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 4rem 1rem;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 
 const VideoContainer = styled.div`
@@ -29,11 +34,21 @@ const VideoContainer = styled.div`
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-radius: 0;
+  }
 `;
 
 const StyledVideo = styled.video`
   width: 100%;
   border-radius: 12px;
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    height: auto;
+  }
 `;
 
 const OverlayText = styled.div`
@@ -51,6 +66,10 @@ const MainTitle = styled.h1`
   font-weight: 500;
   letter-spacing: 0.2rem;
   margin-bottom: 0.6rem;
+
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+  }
 `;
 
 const SubTitle = styled.p`
@@ -59,9 +78,14 @@ const SubTitle = styled.p`
   line-height: 1.6;
   max-width: 650px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
 `;
 
-// 🛍️ PRODUCTS SECTION
+/* ------------------ PRODUCT SECTION ------------------ */
 const ProductSection = styled.section`
   padding: 4rem 2rem;
   position: relative;
@@ -159,7 +183,7 @@ const RightArrow = styled(ArrowBase)`
   right: 0;
 `;
 
-// 🖼️ BANNER SECTION
+/* ------------------ BANNER SECTION ------------------ */
 const BannerSection = styled.div`
   display: flex;
   margin-top: 5rem;
@@ -168,12 +192,12 @@ const BannerSection = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 5%;
+  position: relative;
 
   @media (max-width: 768px) {
     flex-direction: column;
     height: auto;
-    padding: 2rem 1rem;
-    gap: 1.5rem;
+    padding: 0;
   }
 `;
 
@@ -188,8 +212,8 @@ const BannerImage = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    height: 320px;
-    border-radius: 12px;
+    height: 500px;
+    position: relative;
   }
 `;
 
@@ -199,8 +223,13 @@ const BannerContent = styled.div`
   padding-right: 2rem;
 
   @media (max-width: 768px) {
-    padding: 0 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
+    padding: 1rem 2rem;
+    z-index: 2;
   }
 `;
 
@@ -219,6 +248,10 @@ const BannerDescription = styled.p`
   color: #ccc;
   margin: 1rem 0 2rem;
   line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+  }
 `;
 
 const ExploreButton = styled.button`
@@ -239,6 +272,7 @@ const ExploreButton = styled.button`
   }
 `;
 
+/* ------------------ MAIN COMPONENT ------------------ */
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [zoom, setZoom] = useState(1);
