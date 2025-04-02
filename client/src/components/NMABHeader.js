@@ -92,7 +92,7 @@ const NMBAHeader = () => {
             <IconWrapper><User size={20} /></IconWrapper>
             <DropdownWrapper className="dropdown">
               <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
-              <DropdownItem onClick={() => navigate('/admin')}>Admin</DropdownItem>
+              <DropdownItem onClick={() => navigate('/Admin')}>Admin</DropdownItem>
               <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
             </DropdownWrapper>
           </ProfileContainer>

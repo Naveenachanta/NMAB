@@ -1,181 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import AmayaChat from '../components/AmayaChat';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import axios from 'axios';
 
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+const AdminWrapper = styled.div`
+  padding: 4rem;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border-radius: 16px;
 `;
 
-const Wrapper = styled.div`
-  background: #fff;
-  min-height: 100vh;
-  overflow: hidden;
-  font-family: 'Didot', serif;
+const Title = styled.h2`
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
   color: #111;
-`;
-
-const VideoBackground = styled.video`
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  filter: brightness(0.6);
-`;
-
-const Logo = styled.h1`
-  font-size: ${({ shrink }) => (shrink ? '2rem' : '6rem')};
-  font-weight: 500;
-  color: white;
-  letter-spacing: 0.5rem;
-  position: fixed;
-  top: ${({ shrink }) => (shrink ? '20px' : '40%')};
-  left: ${({ shrink }) => (shrink ? '40px' : '50%')};
-  transform: translateX(${({ shrink }) => (shrink ? '0' : '-50%')});
-  z-index: 3;
-  transition: all 1.2s ease;
-`;
-
-const Slogan = styled.p`
-  font-size: 1.5rem;
   text-align: center;
-  color: white;
-  position: fixed;
-  top: 58%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: ${({ show }) => (show ? 1 : 0)};
-  transition: opacity 1s ease;
 `;
 
-const Content = styled.div`
-  margin-top: 100vh;
-  padding: 4rem 2rem;
-  animation: ${fadeIn} 1s ease forwards;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-family: 'Didot', serif;
-`;
-
-const Grid = styled.div`
+const Form = styled.form`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2.5rem;
+  flex-direction: column;
+  gap: 1.2rem;
 `;
 
-const Card = styled.div`
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  padding: 1.5rem;
-  width: 280px;
-  text-align: center;
-  transition: all 0.3s ease;
+const Input = styled.input`
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+`;
+
+const TextArea = styled.textarea`
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+`;
+
+const Button = styled.button`
+  background-color: #000;
+  color: white;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
 
   &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 14px 32px rgba(0,0,0,0.12);
-  }
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: #666;
-  }
-
-  .badge {
-    margin-top: 0.5rem;
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.7rem;
-    color: white;
-    background: black;
-    border-radius: 999px;
+    background-color: #222;
   }
 `;
 
-const Dashboard = () => {
-  const [shrinkLogo, setShrinkLogo] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [username, setUsername] = useState('guest');
+const Admin = () => {
+  const [product, setProduct] = useState({
+    name: '',
+    description: '',
+    category: '',
+    tags: '',
+    image: null,
+  });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    try {
-      const decoded = JSON.parse(atob(token?.split('.')[1] || ''));
-      setUsername(decoded?.email?.split('@')[0] || 'guest');
-    } catch {
-      setUsername('guest');
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+      setProduct({ ...product, image: files[0] });
+    } else {
+      setProduct({ ...product, [name]: value });
     }
+  };
 
-    setTimeout(() => {
-      setShrinkLogo(true);
-      setShowContent(true);
-    }, 4500); // Logo animation time
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const fetchProducts = async () => {
-      try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
-        setProducts(res.data);
-      } catch (err) {
-        console.error("Failed to fetch products", err);
-      }
-    };
+    const formData = new FormData();
+    formData.append('name', product.name);
+    formData.append('description', product.description);
+    formData.append('category', product.category);
+    formData.append('tags', product.tags);
+    formData.append('image', product.image); // ✅ Correct way
 
-    fetchProducts();
-  }, []);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/upload-product`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      alert('✅ Product uploaded successfully');
+      setProduct({
+        name: '',
+        description: '',
+        category: '',
+        tags: '',
+        image: null,
+      });
+    } catch (err) {
+      console.error(err);
+      alert('❌ Error uploading product');
+    }
+  };
 
   return (
-    <Wrapper>
-      <VideoBackground autoPlay muted loop playsInline>
-        <source src="/assets/gucci-intro.mp4" type="video/mp4" />
-      </VideoBackground>
-
-      <Logo shrink={shrinkLogo}>NMAB</Logo>
-      <Slogan show={!shrinkLogo}>Crafted Skincare. Curated for You.</Slogan>
-
-      {showContent && (
-        <Content>
-          <SectionTitle>Hi, {username} — Explore Curated Picks</SectionTitle>
-          <Grid>
-            {products.map((product) => (
-              <Card key={product._id}>
-                <img src={product.imageUrl} alt={product.name} />
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                {product.tags?.length > 1 && <div className="badge">Recommended</div>}
-              </Card>
-            ))}
-          </Grid>
-        </Content>
-      )}
-
-      <AmayaChat />
-    </Wrapper>
+    <AdminWrapper>
+      <Title>Upload New Product</Title>
+      <Form onSubmit={handleSubmit}>
+        <Input name="name" placeholder="Product Name" value={product.name} onChange={handleChange} required />
+        <TextArea name="description" placeholder="Product Description" value={product.description} onChange={handleChange} required />
+        <Input name="category" placeholder="Category" value={product.category} onChange={handleChange} required />
+        <Input name="tags" placeholder="Tags (comma separated)" value={product.tags} onChange={handleChange} />
+        <Input type="file" name="image" accept="image/*" onChange={handleChange} required />
+        <Button type="submit">Upload Product</Button>
+      </Form>
+    </AdminWrapper>
   );
 };
 
-export default Dashboard;
+export default Admin;

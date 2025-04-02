@@ -212,7 +212,7 @@ const Dashboard = () => {
         <ProductGrid>
           {products.map((product) => (
             <ProductCard key={product._id}>
-              <img src={product.imageUrl} alt={product.name} />
+              <img src={product.image} alt={product.name} />
               <h3>{product.name}</h3>
               <p className="price">{product.price ? `$${product.price}` : 'Coming soon'}</p>
             </ProductCard>
