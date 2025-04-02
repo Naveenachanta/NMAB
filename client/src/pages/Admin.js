@@ -74,15 +74,20 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('❌ You must be logged in as an admin to upload products.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', product.name);
     formData.append('description', product.description);
     formData.append('category', product.category);
     formData.append('tags', product.tags);
-    formData.append('image', product.image); // ✅ Correct way
+    formData.append('image', product.image);
 
     try {
-      const token = localStorage.getItem('token');
       await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/upload-product`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,8 +104,13 @@ const Admin = () => {
         image: null,
       });
     } catch (err) {
-      console.error(err);
-      alert('❌ Error uploading product');
+      console.error("Upload Error:", err);
+
+      if (err.response && err.response.status === 401) {
+        alert("⚠️ Unauthorized. Please log in as an admin.");
+      } else {
+        alert("❌ Something went wrong while uploading. Try again.");
+      }
     }
   };
 
@@ -108,11 +118,40 @@ const Admin = () => {
     <AdminWrapper>
       <Title>Upload New Product</Title>
       <Form onSubmit={handleSubmit}>
-        <Input name="name" placeholder="Product Name" value={product.name} onChange={handleChange} required />
-        <TextArea name="description" placeholder="Product Description" value={product.description} onChange={handleChange} required />
-        <Input name="category" placeholder="Category" value={product.category} onChange={handleChange} required />
-        <Input name="tags" placeholder="Tags (comma separated)" value={product.tags} onChange={handleChange} />
-        <Input type="file" name="image" accept="image/*" onChange={handleChange} required />
+        <Input
+          name="name"
+          placeholder="Product Name"
+          value={product.name}
+          onChange={handleChange}
+          required
+        />
+        <TextArea
+          name="description"
+          placeholder="Product Description"
+          value={product.description}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          name="category"
+          placeholder="Category"
+          value={product.category}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          name="tags"
+          placeholder="Tags (comma separated)"
+          value={product.tags}
+          onChange={handleChange}
+        />
+        <Input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleChange}
+          required
+        />
         <Button type="submit">Upload Product</Button>
       </Form>
     </AdminWrapper>
