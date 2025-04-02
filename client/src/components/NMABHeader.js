@@ -1,154 +1,105 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
-import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+import { User, ShoppingBag, List, MagnifyingGlass } from 'phosphor-react';
 
-const HeaderWrapper = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 3rem;
-  background-color: #fff;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  position: relative;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 1rem 1.5rem;
-  }
+const HeaderContainer = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: black;
 `;
 
-const LogoWrapper = styled.div`
+const Header = styled.header`
+  color: white;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 72px;
+  position: relative;
+`;
+
+const Logo = styled.div`
+  font-family: 'Didot', serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.3rem;
+  cursor: pointer;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-
-  @media (max-width: 768px) {
-    position: static;
-    transform: none;
-    margin-bottom: 1rem;
-  }
 `;
 
-const Logo = styled.h1`
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 2.5rem;
-  letter-spacing: 1.2rem;
-  color: #000;
-  text-align: center;
-  margin: 0 auto;
-  text-transform: uppercase;
-  transition: all 0.3s ease-in-out;
-  cursor: default;
-  animation: fadeIn 1.2s ease-in-out;
-
-  &:hover {
-    color: #d60480;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-    letter-spacing: 0.6rem;
-  }
-`;
-
-const Left = styled.div`
-  flex: 1;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const Right = styled.nav`
+const RightIcons = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 1.6rem;
+  align-items: center;
+`;
+
+const IconWrapper = styled.div`
+  cursor: pointer;
+  position: relative;
+`;
+
+const ProfileContainer = styled.div`
+  position: relative;
+  display: flex;
   align-items: center;
 
-  @media (max-width: 768px) {
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+  &:hover .dropdown {
+    display: block;
   }
 `;
 
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #ff0077;
-  }
+const DropdownWrapper = styled.div`
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: black;
+  border: 1px solid #333;
+  border-radius: 6px;
+  z-index: 2000;
+  min-width: 160px;
+  padding: 0.5rem 0;
 `;
 
-const LogoutButton = styled.button`
-  background: none;
-  border: none;
-  color: #000;
-  font-weight: 500;
+const DropdownItem = styled.div`
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: white;
   cursor: pointer;
-  font-size: 1rem;
-  transition: color 0.3s ease;
 
   &:hover {
-    color: #ff0077;
+    background-color: #111;
   }
 `;
 
-const NMABHeader = () => {
+const NMBAHeader = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded =  jwtDecode(token);
-        if (decoded.role === 'admin') {
-          setIsAdmin(true);
-        }
-      } catch (err) {
-        console.error("Invalid token:", err);
-      }
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("profileImage");
-    localStorage.removeItem("username");
-    navigate("/login");
-  };
 
   return (
-    <HeaderWrapper>
-      <Left />
-      <LogoWrapper>
-        <Logo>Lumicare</Logo>
-      </LogoWrapper>
-      <Right>
-        <NavLink to="/dashboard">Home</NavLink>
-        <NavLink to="/profile">Profile</NavLink>
-        {isAdmin && <NavLink to="/admin">Admin</NavLink>} {/* ✅ Conditionally show */}
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-      </Right>
-    </HeaderWrapper>
+    <HeaderContainer>
+      <Header>
+        <Logo onClick={() => navigate('/dashboard')}>LUMICARE</Logo>
+
+        <RightIcons>
+          <IconWrapper><MagnifyingGlass size={20} /></IconWrapper>
+          <IconWrapper><ShoppingBag size={20} /></IconWrapper>
+          <IconWrapper><List size={20} /></IconWrapper>
+
+          <ProfileContainer>
+            <IconWrapper><User size={20} /></IconWrapper>
+            <DropdownWrapper className="dropdown">
+              <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
+              <DropdownItem onClick={() => navigate('/admin')}>Admin</DropdownItem>
+              <DropdownItem onClick={() => navigate('/login')}>Logout</DropdownItem>
+            </DropdownWrapper>
+          </ProfileContainer>
+        </RightIcons>
+      </Header>
+    </HeaderContainer>
   );
 };
-export default NMABHeader;
+
+export default NMBAHeader;

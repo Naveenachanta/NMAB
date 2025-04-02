@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-// ✅ Styled Components (NO CHANGE in styling)
 const ChatWrapper = styled.div`
   position: fixed;
   bottom: 30px;
@@ -11,49 +10,48 @@ const ChatWrapper = styled.div`
 `;
 
 const ChatBubble = styled.div`
-  background-color: #000;
-  color: #fff;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  font-size: 1.4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(255,255,255,0.15);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 
   &:hover {
     transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
   }
 `;
 
 const ChatBox = styled.div`
-  width: 360px;
-  max-height: 500px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  width: 370px;
+  max-height: 520px;
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: popIn 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 
   @keyframes popIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 `;
 
 const Header = styled.div`
-  background: #000;
-  color: white;
   padding: 1rem;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-align: center;
-  position: relative;
+  color: white;
 `;
 
 const CloseBtn = styled.div`
@@ -63,10 +61,6 @@ const CloseBtn = styled.div`
   font-size: 1.1rem;
   color: white;
   cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
 `;
 
 const Messages = styled.div`
@@ -80,8 +74,8 @@ const Messages = styled.div`
 
 const InputWrapper = styled.div`
   display: flex;
-  border-top: 1px solid #eee;
-  padding: 0.6rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 0.7rem;
   align-items: center;
 `;
 
@@ -90,43 +84,51 @@ const Input = styled.input`
   padding: 0.6rem 0.8rem;
   border: none;
   outline: none;
+  background: transparent;
+  color: white;
   font-size: 0.95rem;
+
+  &::placeholder {
+    color: #ddd;
+  }
 `;
 
 const SendButton = styled.button`
-  background: #000;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: white;
   padding: 0.5rem 1rem;
   font-weight: bold;
+  border-radius: 10px;
   cursor: pointer;
-  margin-left: 8px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
 `;
 
 const PromptBox = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 1rem;
 `;
 
 const Prompt = styled.div`
-  background: #f3f3f3;
-  color: #333;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   padding: 6px 12px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   cursor: pointer;
 
   &:hover {
-    background: #000;
-    color: white;
+    background: rgba(255, 255, 255, 0.2);
   }
 `;
 
 const MessageBubble = styled.div`
-  background: ${({ type }) => (type === 'user' ? '#f1f1f1' : '#eee')};
-  color: #333;
+  background: ${({ type }) => (type === 'user' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.08)')};
+  color: white;
   padding: 10px 14px;
   border-radius: 12px;
   max-width: 80%;
@@ -137,14 +139,12 @@ const MessageBubble = styled.div`
 `;
 
 const Avatar = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-
-// ✅ Main Component
 const AmayaChat = () => {
   const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -159,7 +159,7 @@ const AmayaChat = () => {
     'What product helps with dark spots?'
   ];
 
-  const botImage = "/amaya-avatar.png"; // ✅ Add to public folder
+  const botImage = "/amaya-avatar.png";
 
   useEffect(() => {
     const fetchProfileImage = async () => {
@@ -185,7 +185,7 @@ const AmayaChat = () => {
       setUserImage(cached);
     }
 
-    fetchProfileImage(); // Always call to stay updated
+    fetchProfileImage();
   }, []);
 
   useEffect(() => {
@@ -211,7 +211,7 @@ const AmayaChat = () => {
   return (
     <ChatWrapper>
       {!expanded ? (
-        <ChatBubble onClick={() => setExpanded(true)}>💬</ChatBubble>
+        <ChatBubble onClick={() => setExpanded(true)}>Chat With Amaya ↑</ChatBubble>
       ) : (
         <ChatBox>
           <Header>

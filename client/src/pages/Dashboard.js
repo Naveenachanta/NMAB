@@ -1,274 +1,235 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import AmayaChat from '../components/AmayaChat';
 
-
-const Wrapper = styled.div`
-  min-height: 100vh;
-  background: #fff;
-  font-family: 'Helvetica Neue', sans-serif;
-  color: #000;
-`;
-
-const TopNav = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 3rem;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-`;
-
-const NavLeft = styled.div`
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-`;
-
-const NavItem = styled.div`
-  position: relative;
-  cursor: pointer;
-  font-weight: 500;
-  color: #222;
-
-  &:hover .dropdown {
-    display: flex;
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 `;
 
-const Dropdown = styled.div`
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+const DashboardWrapper = styled.div`
+  background-color: #000;
+  color: white;
+  font-family: 'Didot', serif;
+  overflow-x: hidden;
+`;
+
+const VideoSection = styled.section`
+  display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  z-index: 10;
+  align-items: center;
+  padding: 4rem 1rem;
 `;
 
-const DropdownItem = styled.div`
-  padding: 0.4rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  white-space: nowrap;
-  color: #222;
-
-  &:hover {
-    background-color: #f3f3f3;
-    color: #000;
-  }
+const VideoContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
 `;
 
-const Logo = styled.h1`
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 2.8rem;
-  letter-spacing: 1.2rem;
-  color: #000;
-  text-transform: uppercase;
+const StyledVideo = styled.video`
+  width: 100%;
+  border-radius: 12px;
 `;
 
-const Title = styled.h1`
+const OverlayText = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
   text-align: center;
+  animation: ${fadeInUp} 1.5s ease-out;
+`;
+
+const MainTitle = styled.h1`
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 0.2rem;
+  margin-bottom: 0.6rem;
+`;
+
+const SubTitle = styled.p`
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+`;
+
+const ProductSection = styled.section`
+  padding: 4rem 2rem;
+`;
+
+const SectionHeading = styled.h2`
   font-size: 2rem;
-  margin: 2rem 0 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const ProductGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 2rem;
-  justify-content: center;
-  padding: 2rem;
 `;
 
 const ProductCard = styled.div`
-  background: #fff;
-  border: 1px solid #eee;
+  background: #111;
   border-radius: 12px;
   padding: 1rem;
-  width: 240px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  transition: 0.3s ease;
-  position: relative;
+  color: white;
+  transition: transform 0.3s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(255, 105, 180, 0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.08);
   }
 
   img {
     width: 100%;
-    height: 160px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: #f8f8f8;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
   }
 
   h3 {
-    font-size: 1rem;
-    margin: 0.75rem 0;
-  }
-
-  .tags {
-    font-size: 0.75rem;
-    color: #888;
     margin-bottom: 0.5rem;
   }
 
-  .badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #d60480;
-    color: white;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
+  .price {
+    font-size: 1rem;
+    color: #aaa;
   }
 `;
 
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+const BannerSection = styled.div`
+  position: relative;
+  margin-top: 4rem;
+  height: 420px;
+  overflow: hidden;
 `;
 
-const spin = keyframes`
-  to { transform: rotate(360deg); }
-`;
-
-const Overlay = styled.div`
-  display: ${({ $show }) => ($show ? 'flex' : 'none')};
-  position: fixed;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  top: 0;
-  left: 0;
+const ZoomableImage = styled.div`
   width: 100%;
   height: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.8s ease;
+  background-image: url('/shop_banner.jpg');
+  background-size: cover;
+  background-position: center;
+  transform: ${({ zoom }) => `scale(${zoom})`};
+  transition: transform 0.3s ease-out;
 `;
 
-const GreetingText = styled.h1`
-  font-size: 2rem;
-  color: #111;
-  margin-bottom: 1rem;
-  animation: ${fadeIn} 1s ease forwards;
-  font-family: 'Poppins', sans-serif;
+const BannerOverlay = styled.div`
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  font-family: 'Didot', serif;
+  z-index: 2;
 `;
 
-const SubText = styled.p`
+const BannerTitle = styled.h2`
+  font-size: 2.4rem;
+  letter-spacing: 0.15rem;
+`;
+
+const BannerDescription = styled.p`
   font-size: 1rem;
-  color: #555;
-  margin-bottom: 2rem;
-  animation: ${fadeIn} 1s ease 0.3s forwards;
-  font-family: 'Poppins', sans-serif;
+  margin-top: 0.5rem;
+  color: #ccc;
 `;
-
-const Spinner = styled.div`
-  border: 4px solid #ddd;
-  border-top: 4px solid #d60480;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: ${spin} 1s linear infinite;
-`;
-
-const categories = {
-  Skincare: ['Cleansers', 'Toners', 'Moisturizers', 'Serums', 'Face Masks', 'Exfoliators', 'SPF/Sunscreen'],
-  Makeup: ['Foundation', 'Concealer', 'Blush', 'Highlighter', 'Eyeshadow', 'Lipstick', 'Mascara'],
-  Hair: ['Shampoo', 'Conditioner', 'Hair Oils', 'Hair Masks', 'Styling Tools'],
-  Body: ['Body Wash', 'Body Lotion', 'Body Scrub', 'Deodorant'],
-  Tools: ['Brushes', 'Sponges', 'Hair Dryer', 'Straighteners']
-};
 
 const Dashboard = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [showOverlay, setShowOverlay] = useState(true);
-  const [username, setUsername] = useState('there');
-  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [zoom, setZoom] = useState(1);
+  const bannerRef = useRef();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    try {
-      const userData = JSON.parse(atob(token?.split('.')[1] || ''));
-      setUsername(userData?.email?.split('@')[0] || 'there');
-    } catch (e) {
-      setUsername('there');
-    }
+    const fetch = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
+        setProducts(res.data || []);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
 
-    setTimeout(() => {
-      setShowOverlay(false);
-    }, 3500);
+    fetch();
   }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
-          const data = response.data;
-          setFilteredProducts(data);
-        } catch (err) {
-          console.error('Error fetching products:', err);
-        }
-      };
+    const handleScroll = () => {
+      if (bannerRef.current) {
+        const rect = bannerRef.current.getBoundingClientRect();
+        const scrollY = window.scrollY;
+        const offsetTop = rect.top + scrollY;
+        const windowHeight = window.innerHeight;
 
-    fetchProducts();
-  }, [selectedCategory, navigate]);
+        const distance = Math.max(0, scrollY - offsetTop + windowHeight / 2);
+        const zoomFactor = 1 + Math.min(distance / 1000, 0.2); // Zoom up to 1.2x
+
+        setZoom(zoomFactor);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <Wrapper>
-      {showOverlay && (
-        <Overlay $show={showOverlay}>
-          <GreetingText>Hi, {username} 👋</GreetingText>
-          <SubText>Loading your ultimate skincare experience...</SubText>
-          <Spinner />
-        </Overlay>
-      )}
+    <DashboardWrapper>
+      <VideoSection>
+        <VideoContainer>
+          <StyledVideo autoPlay muted loop playsInline>
+            <source src="/hero.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </StyledVideo>
+          <OverlayText>
+            <MainTitle>LUMICARE</MainTitle>
+            <SubTitle>
+              Explore our handpicked skincare essentials that match your lifestyle.
+            </SubTitle>
+          </OverlayText>
+        </VideoContainer>
+      </VideoSection>
 
-      <TopNav>
-        <NavLeft>
-          {Object.entries(categories).map(([main, subs]) => (
-            <NavItem key={main}>
-              {main}
-              <Dropdown className="dropdown">
-                {subs.map(sub => (
-                  <DropdownItem key={sub} onClick={() => setSelectedCategory(sub)}>
-                    {sub}
-                  </DropdownItem>
-                ))}
-              </Dropdown>
-            </NavItem>
+      <ProductSection>
+        <SectionHeading>Our Featured Products</SectionHeading>
+        <ProductGrid>
+          {products.map((product) => (
+            <ProductCard key={product._id}>
+              <img src={product.imageUrl} alt={product.name} />
+              <h3>{product.name}</h3>
+              <p className="price">{product.price ? `$${product.price}` : 'Coming soon'}</p>
+            </ProductCard>
           ))}
-        </NavLeft>
-      </TopNav>
+        </ProductGrid>
+      </ProductSection>
 
-      <Title>Explore Curated Products</Title>
-      <ProductGrid>
-        {filteredProducts.map(product => (
-          <ProductCard key={product._id}>
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <div className="tags">{product.tags?.join(', ')}</div>
-            {product.tags?.length > 1 && <div className="badge">Recommended</div>}
-          </ProductCard>
-        ))}
-        {filteredProducts.length === 0 && (
-          <p>No products found for this category.</p>
-        )}
-      </ProductGrid>
+      <BannerSection ref={bannerRef}>
+        <ZoomableImage zoom={zoom} />
+        <BannerOverlay>
+          <BannerDescription>Premium skincare, thoughtfully curated for you</BannerDescription>
+          <BannerTitle>Shop The Collection</BannerTitle>
+        </BannerOverlay>
+      </BannerSection>
+
       <AmayaChat />
-    </Wrapper>
+    </DashboardWrapper>
   );
 };
 
