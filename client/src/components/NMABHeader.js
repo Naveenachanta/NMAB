@@ -174,7 +174,7 @@ const Logo = styled.h1`
   font-family: "Didot", serif;
   font-weight: 400;
   font-size: 2rem;
-  letter-spacing: 0.7rem;  // Wider spacing for luxury feel
+  letter-spacing: 0.5rem;  // Wider spacing for luxury feel
   margin: 0;
   cursor: pointer;
   text-transform: uppercase; // Optional: consistent caps like LV
