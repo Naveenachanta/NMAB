@@ -156,11 +156,11 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 1.2rem;
+  padding: 2rem 2.5rem;  // Restored original generous spacing for desktop
   position: relative;
 
   @media (max-width: 768px) {
-    padding: 1.2rem 1rem;
+    padding: 1.2rem 1rem;  // Tighter padding for mobile
   }
 `;
 const LogoWrapper = styled.div`
@@ -187,18 +187,19 @@ const Logo = styled.h1`
 
 const RightIcons = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;  // Increased from 1.5rem or 1rem for better spacing
   align-items: center;
   margin-left: auto;
 
   @media (max-width: 768px) {
-    gap: 0.8rem;
+    gap: 1.2rem;  // Still spacious, but slightly tighter for mobile
     svg {
       width: 20px;
       height: 20px;
     }
   }
 `;
+
 const IconWrapper = styled.div`
   cursor: pointer;
 `;
