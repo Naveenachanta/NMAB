@@ -5,7 +5,7 @@ import Footer from './Footer';
 
 const Layout = () => {
   const location = useLocation();
-  const hideHeader = ['/register', '/login', '/thankyou'].includes(location.pathname);
+  const hideHeader = ['/thankyou'].includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white text-black">
@@ -18,9 +18,9 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      {!hideHeader && (
+      
         <Footer />
-      )}
+      
     </div>
   );
 };

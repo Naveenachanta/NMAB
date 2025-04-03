@@ -1,23 +1,11 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import {
-  LoginPage,
-  LoginBox,
-  NMABLogo,
-  Title,
-  Subtitle,
-  Form,
-  InputContainer,
-  Input,
-  Label,
-  Button,
-  ForgotLink,
-  FooterText,
-  Footer,
-  GoogleButton
-} from './Login.styles';
-
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import {
+  LoginPage, PageTitle, Subtitle, Form,
+  InputContainer, Input, FloatingLabel, Button,
+  FooterText, Footer, GoogleButton
+} from './Login.styles';
 
 const Login = () => {
   const [step, setStep] = useState(1);
@@ -33,94 +21,75 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        process.env.REACT_APP_API_URL + '/api/auth/login',
         { email, password },
         { withCredentials: true }
       );
-
       if (response.data?.token) {
-        const token = response.data.token;
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', response.data.token);
+        const decoded = JSON.parse(atob(response.data.token.split('.')[1]));
+        localStorage.setItem("profileImage", decoded.image || "/default-avatar.png");
 
-        try {
-          const decoded = JSON.parse(atob(token.split('.')[1]));
-          localStorage.setItem("profileImage", decoded.image || "/default-avatar.png");
-        } catch {
-          localStorage.setItem("profileImage", "/default-avatar.png");
-        }
-
-        try {
-          const prefRes = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/preferences`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-              withCredentials: true,
-            }
-          );
-
-          window.location.href = prefRes.data ? '/dashboard' : '/preferences';
-        } catch (error) {
-          alert('Error checking preferences.');
-        }
+        const prefRes = await axios.get(
+          process.env.REACT_APP_API_URL + '/api/preferences',
+          {
+            headers: { Authorization: `Bearer ${response.data.token}` },
+            withCredentials: true,
+          }
+        );
+        window.location.href = prefRes.data ? '/dashboard' : '/preferences';
       } else {
         alert('Login failed. Please try again.');
       }
     } catch (err) {
-      console.error('Login error:', err);
       alert(err.response?.data?.message || 'Login failed. Try again.');
     }
   };
 
   return (
     <LoginPage>
-    <LoginBox>
-      <NMABLogo>LUMICARE</NMABLogo>
-      <Title>Welcome Back!</Title>
-      <Subtitle>Log in to unlock access to the ultimate beauty experience</Subtitle>
-  
+      <PageTitle>Sign In</PageTitle>
+      <Subtitle>Access your LUMICARE account</Subtitle>
+
       <Form onSubmit={step === 1 ? handleContinue : handleLogin}>
         <InputContainer>
           <Input
             type="email"
-            placeholder=" "
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder=" "
             required
           />
-          <Label>Email address or Username</Label>
+          <FloatingLabel>Email address or username</FloatingLabel>
         </InputContainer>
-  
+
         {step === 2 && (
-          <>
-            <InputContainer>
-              <Input
-                type="password"
-                placeholder=" "
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <Label>Password</Label>
-            </InputContainer>
-            <ForgotLink to="/forgot-password">Forgot password?</ForgotLink>
-          </>
+          <InputContainer>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder=" "
+              required
+            />
+            <FloatingLabel>Password</FloatingLabel>
+          </InputContainer>
         )}
+
         <Button type="submit">{step === 1 ? 'Continue' : 'Login'}</Button>
       </Form>
-  
+
       <FooterText>
-        New to LUMICARE? <Link to="/register">Create an Account</Link>
+        New to LUMICARE? <Link to="/register">Create account</Link>
       </FooterText>
-  
+
       <GoogleButton href="https://api.swotandstudy.com/api/auth/google">
         <img src="/google-icon.png" alt="Google icon" />
         Sign in with Google
       </GoogleButton>
-  
+
       <Footer>© {new Date().getFullYear()} LUMICARE. All rights reserved.</Footer>
-    </LoginBox>
-  </LoginPage>
-  
+    </LoginPage>
   );
 };
 

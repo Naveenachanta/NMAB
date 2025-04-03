@@ -1,165 +1,136 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const LoginPage = styled.div`
-  min-height: 100vh;
-  background: black;
+  background: #000;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Cormorant Garamond', serif;
-  padding: 2rem;
-`;
-
-export const LoginBox = styled.div`
-  max-width: 420px;
-  width: 100%;
-  padding: 3rem 2rem;
+  min-height: 100vh;
+  padding: 5rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: 'Cormorant Garamond', serif;
 `;
 
 export const NMABLogo = styled.h1`
-  font-family: 'Didot', serif;
-  font-size: 2.6rem;
-  letter-spacing: 1rem;
-  font-weight: 400;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  font-size: 2rem;
+  letter-spacing: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 2rem;
 `;
 
-export const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 0.5rem;
-  text-align: center;
+export const PageTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  margin: 0 0 0.3rem;
+  padding-top: 1rem;
 `;
 
 export const Subtitle = styled.p`
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 300;
   color: #ccc;
-  margin-bottom: 2.5rem;
-  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: 0.4rem;
 `;
 
 export const Form = styled.form`
   width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 `;
 
 export const InputContainer = styled.div`
   position: relative;
+  margin-bottom: 2.5rem;
+`;
+
+export const FloatingLabel = styled.label`
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
 `;
 
 export const Input = styled.input`
   background: transparent;
   border: none;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid #444;
+  padding: 1rem 1rem 0.5rem;
   width: 100%;
-  padding: 1rem 0;
-  font-size: 1.1rem;
   color: white;
+  font-size: 1rem;
   font-family: 'Cormorant Garamond', serif;
-
   &:focus {
     outline: none;
-    border-bottom-color: white;
+    border-color: white;
   }
-
-  &:focus + label,
-  &:not(:placeholder-shown) + label {
-    transform: translateY(-22px);
+  &:focus + ${FloatingLabel}, &:not(:placeholder-shown) + ${FloatingLabel} {
+    top: -0.5rem;
     font-size: 0.75rem;
-    opacity: 0.85;
+    color: white;
   }
-`;
-
-export const Label = styled.label`
-  position: absolute;
-  top: 1rem;
-  left: 0;
-  color: #aaa;
-  font-size: 1rem;
-  pointer-events: none;
-  transition: all 0.3s ease;
 `;
 
 export const Button = styled.button`
-  padding: 1rem;
-  background-color: white;
+  background: white;
   color: black;
   border: none;
+  padding: 0.9rem 0;
   font-size: 1rem;
-  font-family: 'Cormorant Garamond', serif;
-  letter-spacing: 0.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
   text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 
   &:hover {
-    background-color: #f5f5f5;
-  }
-`;
-
-export const ForgotLink = styled(Link)`
-  font-size: 0.85rem;
-  color: #aaa;
-  text-decoration: none;
-  text-align: right;
-  display: block;
-  margin-top: -1.5rem;
-
-  &:hover {
-    text-decoration: underline;
+    background: #ddd;
   }
 `;
 
 export const FooterText = styled.p`
-  text-align: center;
-  font-size: 0.95rem;
-  margin-top: 2rem;
-  color: #ccc;
+  font-size: 0.9rem;
+  margin: 1.5rem 0 1rem;
+  color: #aaa;
 
   a {
     color: white;
-    text-decoration: underline;
     font-weight: 500;
+    text-decoration: underline;
+  }
+`;
+
+export const GoogleButton = styled.a`
+  margin-top: 1rem;
+  background: white;
+  color: black;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 500;
+
+  img {
+    width: 20px;
+    height: 20px;
   }
 `;
 
 export const Footer = styled.footer`
-  text-align: center;
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 2.5rem;
-`;
-
-export const GoogleButton = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  color: black;
-  border-radius: 25px;
-  padding: 0.8rem 1.5rem;
-  font-size: 0.95rem;
-  font-family: 'Cormorant Garamond', serif;
-  text-decoration: none;
-  margin-top: 1.8rem;
-  gap: 10px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #f5f5f5;
-    transform: translateY(-2px);
-  }
-
-  img {
-    width: 18px;
-    height: 18px;
-  }
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 3rem;
 `;
