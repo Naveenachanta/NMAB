@@ -18,7 +18,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Login />} />
+            <Route index element={<Dashboard />} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="preferences" element={<Preferences />} />
