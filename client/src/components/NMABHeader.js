@@ -73,7 +73,7 @@ const NMABHeader = ({ scrollContainerRef }) => {
         </LogoWrapper>
 
         <RightIcons>
-          <IconWrapper><MagnifyingGlass size={24} /></IconWrapper>
+          {/* <IconWrapper><MagnifyingGlass size={24} /></IconWrapper> */}
           <IconWrapper><ShoppingBag size={24} /></IconWrapper>
 
           <ProfileContainer>
@@ -187,10 +187,10 @@ const Logo = styled.h1`
 
 const RightIcons = styled.div`
   display: flex;
-  gap: 1.5rem;  // Increased from 1.5rem or 1rem for better spacing
+  gap: 2rem;  // Increased from 1.5rem or 1rem for better spacing
   align-items: center;
   margin-left: auto;
-
+          
   @media (max-width: 768px) {
     gap: 1.2rem;  // Still spacious, but slightly tighter for mobile
     svg {
