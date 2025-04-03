@@ -155,10 +155,14 @@ const HeaderContainer = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
-  padding: 2rem 2.5rem; // Restore generous top-bottom spacing
+  justify-content: space-between;
+  padding: 1.5rem 1.2rem;
   position: relative;
-`;
 
+  @media (max-width: 768px) {
+    padding: 1.2rem 1rem;
+  }
+`;
 const LogoWrapper = styled.div`
   position: absolute;
   left: 50%;
@@ -183,11 +187,18 @@ const Logo = styled.h1`
 
 const RightIcons = styled.div`
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   align-items: center;
   margin-left: auto;
-`;
 
+  @media (max-width: 768px) {
+    gap: 0.8rem;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+`;
 const IconWrapper = styled.div`
   cursor: pointer;
 `;
