@@ -184,51 +184,47 @@ const RightArrow = styled(ArrowBase)`
 `;
 
 /* ------------------ BANNER SECTION ------------------ */
+// 🖼️ BANNER SECTION
 const BannerSection = styled.div`
-  display: flex;
-  margin-top: 5rem;
-  height: 520px;
-  overflow: hidden;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5%;
   position: relative;
+  height: 520px;
+  display: flex;
+  overflow: hidden;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    height: auto;
-    padding: 0;
+    height: 480px;
+    display: block;
   }
 `;
 
 const BannerImage = styled.div`
   flex: 1;
-  height: 100%;
   background-image: url('/shop_banner.jpg');
   background-size: cover;
   background-position: center;
-  transform: ${({ zoom }) => `scale(${zoom})`};
-  transition: transform 0.2s ease-out;
+  background-repeat: no-repeat;
+  height: 100%;
 
   @media (max-width: 768px) {
-    width: 100%;
-    height: 500px;
-    position: relative;
+    filter: brightness(0.85);
   }
 `;
 
 const BannerContent = styled.div`
   flex: 1;
-  padding-left: 3rem;
+  padding-left: 4rem;
   padding-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @media (max-width: 768px) {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 0 1rem;
     text-align: center;
-    padding: 1rem 2rem;
     z-index: 2;
   }
 `;
@@ -251,6 +247,7 @@ const BannerDescription = styled.p`
 
   @media (max-width: 768px) {
     font-size: 0.95rem;
+    color: #eee;
   }
 `;
 
@@ -258,7 +255,7 @@ const ExploreButton = styled.button`
   background: transparent;
   color: white;
   border: 1px solid white;
-  padding: 0.7rem 1.6rem;
+  padding: 0.6rem 1.5rem;
   border-radius: 30px;
   font-family: 'Didot', serif;
   font-size: 0.9rem;
@@ -270,7 +267,20 @@ const ExploreButton = styled.button`
     background: white;
     color: black;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+  }
 `;
+
+
+
+
+
+
+
+
 
 /* ------------------ MAIN COMPONENT ------------------ */
 const Dashboard = () => {
@@ -348,17 +358,17 @@ const Dashboard = () => {
           )}
         </ScrollContainer>
       </ProductSection>
-
       <BannerSection>
-        <BannerImage zoom={zoom} />
-        <BannerContent>
-          <BannerTitle>SHOP THE COLLECTION</BannerTitle>
-          <BannerDescription>
-            Premium skincare, thoughtfully curated for you. Explore our seasonal essentials designed for every skin type.
-          </BannerDescription>
-          <ExploreButton>Explore Now</ExploreButton>
-        </BannerContent>
-      </BannerSection>
+  <BannerImage />
+  <BannerContent>
+    <BannerTitle>SHOP THE COLLECTION</BannerTitle>
+    <BannerDescription>
+      Premium skincare, thoughtfully curated for you. Explore our seasonal essentials designed for every skin type.
+    </BannerDescription>
+    <ExploreButton>Explore Now</ExploreButton>
+  </BannerContent>
+</BannerSection>
+
 
       <AmayaChat />
     </DashboardWrapper>
