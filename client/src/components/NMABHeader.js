@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MagnifyingGlass, ShoppingBag, User } from "phosphor-react";
 import { FiMenu, FiX } from "react-icons/fi";
 
-const NMABHeader = () => {
+const NMABHeader = ({ scrollContainerRef }) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [token, setToken] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef();
 
   useEffect(() => {
@@ -20,8 +21,7 @@ const NMABHeader = () => {
       try {
         const decoded = JSON.parse(atob(storedToken.split('.')[1]));
         setUserRole(decoded?.role || "user");
-      } catch (error) {
-        console.error("Invalid token:", error);
+      } catch {
         localStorage.removeItem("token");
       }
     }
@@ -34,10 +34,21 @@ const NMABHeader = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef?.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      setScrolled(scrollTop > 50);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [scrollContainerRef]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -48,21 +59,17 @@ const NMABHeader = () => {
   };
 
   const mobileMenuItems = [
-    "New Arrivals",
-    "Skincare",
-    "Body Care",
-    "Hair",
-    "Fragrance",
-    "Memberships",
-    "Our Story",
-    "Contact"
+    "New Arrivals", "Skincare", "Body Care", "Hair",
+    "Fragrance", "Memberships", "Our Story", "Contact"
   ];
 
   return (
     <HeaderContainer>
       <Header>
         <LogoWrapper>
-          <Logo onClick={() => navigate("/dashboard")}>LUMICARE</Logo>
+          <Logo $scrolled={scrolled} onClick={() => navigate("/dashboard")}>
+            LUMICARE
+          </Logo>
         </LogoWrapper>
 
         <RightIcons>

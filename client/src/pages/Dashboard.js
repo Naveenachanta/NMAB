@@ -261,7 +261,7 @@ const ExploreButton = styled.button`
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 
   &:hover {
     background: white;
@@ -269,8 +269,8 @@ const ExploreButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    padding: 0.5rem 1.2rem;
     font-size: 0.85rem;
+    padding: 0.5rem 1.2rem;
   }
 `;
 
