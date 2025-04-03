@@ -254,14 +254,16 @@ const DropdownWrapper = styled.div`
 `;
 
 const DropdownItem = styled.div`
-  padding: 0.75rem 1rem;
+   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
   border-bottom: 1px solid #333;
   background: black;
+  color: #aaa; /* Light grey text */
+  transition: color 0.3s ease;
 
   &:hover {
-    background: black;
+    color: white; /* White on hover */
   }
 `;
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CustomToast from '../components/CustomToast';
+
 import {
   LoginPage, PageTitle, Subtitle, Form,
   InputContainer, Input, FloatingLabel, Button,
@@ -11,7 +13,12 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+const [toastMessage, setToastMessage] = useState('');
 
+const showToast = (message) => {
+  setToastMessage(message);
+  setTimeout(() => setToastMessage(''), 3000);
+};
   const handleContinue = (e) => {
     e.preventDefault();
     if (email.length > 4) setStep(2);
@@ -26,13 +33,13 @@ const Register = () => {
         { withCredentials: true }
       );
       if (response.data?.message === 'User created successfully') {
-        alert('Registration successful!');
+        showToast('Registration successful!');
         window.location.href = '/login';
       } else {
-        alert('Registration failed. Try again.');
+        showToast('Registration failed. Try again.');
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Registration failed.');
+      showToast(err.response?.data?.message || 'Registration failed. Please try after sometime');
     }
   };
 
@@ -79,6 +86,7 @@ const Register = () => {
       </GoogleButton>
 
       <Footer>© {new Date().getFullYear()} LUMICARE. All rights reserved.</Footer>
+            <CustomToast message={toastMessage} />
     </LoginPage>
   );
 };

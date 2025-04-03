@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CustomToast from '../components/CustomToast';
 import {
   LoginPage, PageTitle, Subtitle, Form,
   InputContainer, Input, FloatingLabel, Button,
@@ -11,7 +12,12 @@ const Login = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
 
+  const showToast = (message) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
   const handleContinue = (e) => {
     e.preventDefault();
     if (email.length > 4) setStep(2);
@@ -37,12 +43,13 @@ const Login = () => {
             withCredentials: true,
           }
         );
+        showToast('Logging in');
         window.location.href = prefRes.data ? '/dashboard' : '/preferences';
       } else {
-        alert('Login failed. Please try again.');
+        showToast('Login failed. Please try again.');
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Login failed. Try again.');
+      showToast(err.response?.data?.message || 'Login failed. Please try after sometime.');
     }
   };
 
@@ -89,6 +96,7 @@ const Login = () => {
       </GoogleButton>
 
       <Footer>© {new Date().getFullYear()} LUMICARE. All rights reserved.</Footer>
+      <CustomToast message={toastMessage} />
     </LoginPage>
   );
 };

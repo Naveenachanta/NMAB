@@ -25,7 +25,7 @@ export const PageTitle = styled.h2`
   font-weight: 500;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
-  margin: 0 0 0.3rem;
+  margin: 0 0 1.4rem;
   padding-top: 1rem;
 `;
 
