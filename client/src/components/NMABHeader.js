@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { MagnifyingGlass, ShoppingBag, User } from "phosphor-react";
 import { FiMenu, FiX } from "react-icons/fi";
 
+// ... (imports remain the same)
+
 const NMABHeader = ({ scrollContainerRef }) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -25,7 +27,6 @@ const NMABHeader = ({ scrollContainerRef }) => {
         localStorage.removeItem("token");
       }
     }
-  
     const handleStorageChange = (event) => {
       if (event.key === "token") {
         const updatedToken = localStorage.getItem("token");
@@ -43,11 +44,9 @@ const NMABHeader = ({ scrollContainerRef }) => {
         }
       }
     };
-  
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
-  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -62,12 +61,10 @@ const NMABHeader = ({ scrollContainerRef }) => {
   useEffect(() => {
     const container = scrollContainerRef?.current;
     if (!container) return;
-
     const handleScroll = () => {
       const scrollTop = container.scrollTop;
       setScrolled(scrollTop > 50);
     };
-
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [scrollContainerRef]);
@@ -95,14 +92,12 @@ const NMABHeader = ({ scrollContainerRef }) => {
         </LogoWrapper>
 
         <RightIcons>
-          {/* <IconWrapper><MagnifyingGlass size={24} /></IconWrapper> */}
           <IconWrapper><ShoppingBag size={24} /></IconWrapper>
 
           <ProfileContainer>
             <IconWrapper onClick={() => setShowDropdown(!showDropdown)}>
               <User size={24} />
             </IconWrapper>
-
             {showDropdown && (
               <DropdownWrapper ref={dropdownRef}>
                 {!token ? (
@@ -131,14 +126,14 @@ const NMABHeader = ({ scrollContainerRef }) => {
 
       {mobileMenuOpen && (
         <>
-          <Backdrop onClick={() => setMobileMenuOpen(false)} />
+          <BlurredOverlay onClick={() => setMobileMenuOpen(false)} />
           <MobileMenu>
             <MobileMenuHeader onClick={() => setMobileMenuOpen(false)}>
               <FiX size={22} />
               <span>Close</span>
             </MobileMenuHeader>
-            <MenuSearchInput placeholder="Search LUMICARE..." />
 
+            <MenuSearchInput placeholder="Search LUMICARE..." />
             <MobileMenuList>
               {mobileMenuItems.map((item, index) => (
                 <li
@@ -163,6 +158,7 @@ const NMABHeader = ({ scrollContainerRef }) => {
 };
 
 export default NMABHeader;
+
 
 // ---------------- Styled Components ----------------
 
@@ -266,6 +262,17 @@ const DropdownItem = styled.div`
     color: white; /* White on hover */
   }
 `;
+const BlurredOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1499;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+`;
+
 
 const Backdrop = styled.div`
   position: fixed;
