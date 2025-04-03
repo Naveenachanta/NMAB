@@ -1,10 +1,22 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import {
-  LoginPage,GoogleButton, LoginLeft, LoginRight, NMABLogo,
-  Title, Subtitle, Form, Input, Button,
-  FooterText, Footer, ForgotLink
+  LoginPage,
+  LoginBox,
+  NMABLogo,
+  Title,
+  Subtitle,
+  Form,
+  InputContainer,
+  Input,
+  Label,
+  Button,
+  ForgotLink,
+  FooterText,
+  Footer,
+  GoogleButton
 } from './Login.styles';
+
 import { Link } from 'react-router-dom';
 
 const Login = () => {
@@ -21,40 +33,34 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL + '/api/auth/login',
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
 
-      if (response.data && response.data.token) {
+      if (response.data?.token) {
         const token = response.data.token;
         localStorage.setItem('token', token);
+
         try {
           const decoded = JSON.parse(atob(token.split('.')[1]));
           localStorage.setItem("profileImage", decoded.image || "/default-avatar.png");
-        } catch (err) {
+        } catch {
           localStorage.setItem("profileImage", "/default-avatar.png");
         }
-      
 
         try {
           const prefRes = await axios.get(
-            process.env.REACT_APP_API_URL + '/api/preferences',
+            `${process.env.REACT_APP_API_URL}/api/preferences`,
             {
               headers: { Authorization: `Bearer ${token}` },
               withCredentials: true,
             }
           );
 
-          if (prefRes.data) {
-            window.location.href = '/dashboard';
-          }
+          window.location.href = prefRes.data ? '/dashboard' : '/preferences';
         } catch (error) {
-          if (error.response?.status === 404) {
-            window.location.href = '/preferences';
-          } else {
-            alert('Error checking preferences.');
-          }
+          alert('Error checking preferences.');
         }
       } else {
         alert('Login failed. Please try again.');
@@ -67,50 +73,54 @@ const Login = () => {
 
   return (
     <LoginPage>
-      <LoginLeft>
-        <img src="/images/registerlogin.png" alt="Woman caring for her skin" />
-      </LoginLeft>
-
-      <LoginRight>
-        <NMABLogo>LUMICARE</NMABLogo>
-        <Title>Welcome Back!</Title>
-        <Subtitle>Log in to unlock access to the ultimate beauty experience</Subtitle>
-
-        <Form onSubmit={step === 1 ? handleContinue : handleLogin}>
+    <LoginBox>
+      <NMABLogo>LUMICARE</NMABLogo>
+      <Title>Welcome Back!</Title>
+      <Subtitle>Log in to unlock access to the ultimate beauty experience</Subtitle>
+  
+      <Form onSubmit={step === 1 ? handleContinue : handleLogin}>
+        <InputContainer>
           <Input
             type="email"
-            placeholder="Email address or Username"
+            placeholder=" "
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {step === 2 && (
-            <>
+          <Label>Email address or Username</Label>
+        </InputContainer>
+  
+        {step === 2 && (
+          <>
+            <InputContainer>
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder=" "
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <ForgotLink to="/forgot-password">Forgot password?</ForgotLink>
-            </>
-          )}
-          <Button type="submit">{step === 1 ? 'Continue' : 'Login'}</Button>
-        </Form>
-
-        <FooterText>
-          Not a member? <Link to="/register">Join Now</Link>
-        </FooterText>
-
-        <GoogleButton href="https://api.swotandstudy.com/api/auth/google">
-  <img src="/google-icon.png" alt="Google icon" />
-  Sign in with Google
-</GoogleButton>
-
-        <Footer>© {new Date().getFullYear()} NMAB. All rights reserved.</Footer>
-      </LoginRight>
-    </LoginPage>
+              <Label>Password</Label>
+            </InputContainer>
+            <ForgotLink to="/forgot-password">Forgot password?</ForgotLink>
+          </>
+        )}
+        <Button type="submit">{step === 1 ? 'Continue' : 'Login'}</Button>
+      </Form>
+  
+      <FooterText>
+        New to LUMICARE? <Link to="/register">Create an Account</Link>
+      </FooterText>
+  
+      <GoogleButton href="https://api.swotandstudy.com/api/auth/google">
+        <img src="/google-icon.png" alt="Google icon" />
+        Sign in with Google
+      </GoogleButton>
+  
+      <Footer>© {new Date().getFullYear()} LUMICARE. All rights reserved.</Footer>
+    </LoginBox>
+  </LoginPage>
+  
   );
 };
 

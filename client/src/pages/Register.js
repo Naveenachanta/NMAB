@@ -2,9 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
-  LoginPage, LoginLeft, LoginRight, NMABLogo,
-  Title, Subtitle, Form, Input, Button,
-  FooterText, Footer
+  LoginPage,
+  LoginBox,
+  NMABLogo,
+  Title,
+  Subtitle,
+  Form,
+  InputContainer,
+  Label,
+  Input,
+  Button,
+  FooterText,
+  Footer,
+  GoogleButton
 } from './Login.styles';
 
 const Register = () => {
@@ -20,7 +30,7 @@ const Register = () => {
         { withCredentials: true }
       );
 
-      if (response.data && response.data.message === 'User created successfully') {
+      if (response.data?.message === 'User created successfully') {
         alert('✅ Registration successful!');
         window.location.href = '/login';
       } else {
@@ -34,38 +44,46 @@ const Register = () => {
 
   return (
     <LoginPage>
-      <LoginLeft>
-        <img src="/images/registerlogin.png" alt="Woman caring for her skin" />
-      </LoginLeft>
-
-      <LoginRight>
+      <LoginBox>
         <NMABLogo>LUMICARE</NMABLogo>
         <Title>Create Your Account</Title>
-        <Subtitle>Sign up to LUMICARE to unlock access to the ultimate beauty experience</Subtitle>
+        <Subtitle>Sign up to unlock access to the ultimate beauty experience</Subtitle>
 
         <Form onSubmit={handleRegister}>
-          <Input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <InputContainer>
+            <Label>Email address</Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </InputContainer>
+
           <Button type="submit">Create Account</Button>
         </Form>
 
         <FooterText>
           Already a member? <Link to="/login">Login here</Link>
         </FooterText>
-        <Footer>© {new Date().getFullYear()} NMAB. All rights reserved.</Footer>
-      </LoginRight>
+
+        <GoogleButton href="https://api.swotandstudy.com/api/auth/google">
+          <img src="/google-icon.png" alt="Google icon" />
+          Sign up with Google
+        </GoogleButton>
+
+        <Footer>© {new Date().getFullYear()} LUMICARE. All rights reserved.</Footer>
+      </LoginBox>
     </LoginPage>
   );
 };

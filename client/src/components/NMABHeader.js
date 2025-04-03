@@ -25,7 +25,29 @@ const NMABHeader = ({ scrollContainerRef }) => {
         localStorage.removeItem("token");
       }
     }
+  
+    const handleStorageChange = (event) => {
+      if (event.key === "token") {
+        const updatedToken = localStorage.getItem("token");
+        if (updatedToken) {
+          setToken(updatedToken);
+          try {
+            const decoded = JSON.parse(atob(updatedToken.split('.')[1]));
+            setUserRole(decoded?.role || "user");
+          } catch {
+            localStorage.removeItem("token");
+          }
+        } else {
+          setToken(null);
+          setUserRole(null);
+        }
+      }
+    };
+  
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -115,6 +137,7 @@ const NMABHeader = ({ scrollContainerRef }) => {
               <FiX size={22} />
               <span>Close</span>
             </MobileMenuHeader>
+            <MenuSearchInput placeholder="Search LUMICARE..." />
 
             <MobileMenuList>
               {mobileMenuItems.map((item, index) => (
@@ -264,6 +287,8 @@ const MobileMenu = styled.div`
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.3s ease forwards;
+  overflow-y: auto;                // 🔥 enables scrolling
+  overscroll-behavior: contain;    // ✨ smooth mobile scroll containment
 
   @keyframes slideInRight {
     from {
@@ -273,7 +298,38 @@ const MobileMenu = styled.div`
       transform: translateX(0%);
     }
   }
+
+  // Optional: hide scrollbar for more refined look
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
+
+const MenuSearchInput = styled.input`
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0.75rem 0;
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.05rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+  }
+
+  &:focus {
+    border-bottom-color: white;
+  }
+`;
+
 
 const MobileMenuHeader = styled.div`
   display: flex;
@@ -300,24 +356,25 @@ const MobileMenuList = styled.ul`
   flex-direction: column;
 
   li {
-    font-family: "Georgia", serif;
-    font-size: 1.25rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
     font-weight: 400;
-    padding: 1.25rem 0;
-    color: white;
+    padding: 1.4rem 0;
+    color: rgba(255, 255, 255, 0.78);  // Softer white
+    letter-spacing: 0.08rem;
     cursor: pointer;
     display: inline-block;
     transition: color 0.2s ease;
 
     &.dimmed {
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.3);  // More faded when not hovered
     }
   }
 
   .menu-text {
     position: relative;
     display: inline-block;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
 
     &::after {
       content: "";
@@ -326,7 +383,7 @@ const MobileMenuList = styled.ul`
       bottom: 0;
       height: 1px;
       width: 0;
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0.8);  // Smooth white underline
       transition: width 0.3s ease;
     }
 

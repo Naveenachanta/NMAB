@@ -1,187 +1,165 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const LoginPage = styled.div`
-  display: flex;
-  flex-direction: row;
   min-height: 100vh;
-  background-color: #fff;
-  font-family: 'Poppins', sans-serif;
-
-  @media (max-width: 768px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-`;
-
-export const LoginLeft = styled.div`
-flex: 1;
-background-color: #dab6f7;
-position: relative;
-overflow: hidden;
-display: flex;
-align-items: center;
-justify-content: center;
-
-
-  img {
-   height: 270%;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: center;
-    z-index: 2;
-  }
-   @media (max-width: 768px) {
-    flex: 1;
-    min-width: 50%;
-  }
-`;
-
-export const LoginRight = styled.div`
-  flex: 1;
-  background-color: #fff;
-  color: #000;
-  padding: 4rem;
+  background: black;
+  color: white;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  padding: 2rem;
+`;
 
-  @media (max-width: 768px) {
-    padding: 2rem;
-  }
+export const LoginBox = styled.div`
+  max-width: 420px;
+  width: 100%;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const NMABLogo = styled.h1`
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: 0.7rem;
-  color: #111;
-  margin-bottom: 0.3rem;
-  text-transform: uppercase;
+  font-family: 'Didot', serif;
+  font-size: 2.6rem;
+  letter-spacing: 1rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
   text-align: center;
-  animation: fadeIn 1s ease;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 `;
 
-
 export const Title = styled.h2`
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin: 0.5rem 0 0.8rem;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
   text-align: center;
 `;
 
 export const Subtitle = styled.p`
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 2.5rem;
   text-align: center;
 `;
 
 export const Form = styled.form`
   width: 100%;
-  max-width: 400px;
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+`;
+
+export const InputContainer = styled.div`
+  position: relative;
 `;
 
 export const Input = styled.input`
-  padding: 0.9rem 1.2rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #666;
+  width: 100%;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: white;
+  }
+
+  &:focus + label,
+  &:not(:placeholder-shown) + label {
+    transform: translateY(-22px);
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+`;
+
+export const Label = styled.label`
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  color: #aaa;
   font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
+`;
+
+export const Button = styled.button`
+  padding: 1rem;
+  background-color: white;
+  color: black;
+  border: none;
+  font-size: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
 
 export const ForgotLink = styled(Link)`
-  font-size: 0.9rem;
-  text-align: right;
-  margin-bottom: 1.5rem;
-  color: #d60480;
+  font-size: 0.85rem;
+  color: #aaa;
   text-decoration: none;
+  text-align: right;
+  display: block;
+  margin-top: -1.5rem;
 
   &:hover {
     text-decoration: underline;
   }
 `;
 
-export const Button = styled.button`
-  padding: 1rem;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #222;
-  }
-`;
-
 export const FooterText = styled.p`
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  color: #444;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 2rem;
+  color: #ccc;
 
   a {
-    color: #d60480;
-    font-weight: bold;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    color: white;
+    text-decoration: underline;
+    font-weight: 500;
   }
 `;
 
 export const Footer = styled.footer`
-  margin-top: 2rem;
+  text-align: center;
   font-size: 0.8rem;
-  color: #aaa;
+  color: #666;
+  margin-top: 2.5rem;
 `;
+
 export const GoogleButton = styled.a`
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
-  color: #555;
-  border: 1px solid #ddd;
-  border-radius: 30px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 500;
+  color: black;
+  border-radius: 25px;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.95rem;
+  font-family: 'Cormorant Garamond', serif;
   text-decoration: none;
-  margin-top: 20px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  margin-top: 1.8rem;
   gap: 10px;
+  transition: all 0.3s ease;
 
   &:hover {
     background: #f5f5f5;
-    box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   img {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 `;
