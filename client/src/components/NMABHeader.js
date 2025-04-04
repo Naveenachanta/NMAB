@@ -78,9 +78,16 @@ const NMABHeader = ({ scrollContainerRef }) => {
   };
 
   const mobileMenuItems = [
-    "New Arrivals", "Skincare", "Body Care", "Hair",
-    "Fragrance", "Memberships", "Our Story", "Contact"
+    { label: "New Arrivals", link: "/products/new" },
+    { label: "Skincare", link: "/products/skincare" },
+    { label: "Body Care", link: "/products/body" },
+    { label: "Hair", link: "/products/hair" },
+    { label: "Fragrance", link: "/products/fragrance" },
+    { label: "Memberships", link: "/memberships" },
+    { label: "Our Story", link: "/about" },
+    { label: "Contact", link: "/contact" },
   ];
+  
 
   return (
     <HeaderContainer>
@@ -128,28 +135,30 @@ const NMABHeader = ({ scrollContainerRef }) => {
         <>
           <BlurredOverlay onClick={() => setMobileMenuOpen(false)} />
           <MobileMenu>
-            <MobileMenuHeader onClick={() => setMobileMenuOpen(false)}>
-              <FiX size={22} />
-              <span>Close</span>
-            </MobileMenuHeader>
+          <MobileMenuHeader>
+  <CloseButton onClick={() => setMobileMenuOpen(false)}>
+    <FiX size={28} />
+  </CloseButton>
+</MobileMenuHeader>
 
             <MenuSearchInput placeholder="Search LUMICARE..." />
             <MobileMenuList>
-              {mobileMenuItems.map((item, index) => (
-                <li
-                  key={index}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate(`/${item.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-")}`);
-                  }}
-                  className={hoveredIndex !== null && hoveredIndex !== index ? "dimmed" : ""}
-                >
-                  <span className="menu-text">{item}</span>
-                </li>
-              ))}
-            </MobileMenuList>
+  {mobileMenuItems.map((item, index) => (
+    <li
+      key={index}
+      onMouseEnter={() => setHoveredIndex(index)}
+      onMouseLeave={() => setHoveredIndex(null)}
+      onClick={() => {
+        setMobileMenuOpen(false);
+        navigate(item.link);
+      }}
+      className={hoveredIndex !== null && hoveredIndex !== index ? "dimmed" : ""}
+    >
+      <span className="menu-text">{item.label}</span>
+    </li>
+  ))}
+</MobileMenuList>
+
           </MobileMenu>
         </>
       )}
@@ -336,6 +345,29 @@ const MenuSearchInput = styled.input`
 
   &:focus {
     border-bottom-color: white;
+  }
+`;
+const CloseButton = styled.div`
+  margin-left: auto;
+  background: white;
+  color: black;
+  border-radius: 50%;
+  padding: 0.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 26px;
+    height: 26px;
+    font-weight: bold;
+  }
+
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
   }
 `;
 

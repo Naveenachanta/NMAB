@@ -27,8 +27,11 @@ router.post('/upload-product', authenticate, requireAdmin, async (req, res) => {
 // 🌐 GET /api/products - Fetch all products
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+    const category = req.query.category;
+const query = category ? { category: new RegExp(`^${category}$`, 'i') } : {};
+const products = await Product.find(query).sort({ createdAt: -1 });
+res.json(products);
+
   } catch (err) {
     console.error('❌ Error fetching products:', err);
     res.status(500).json({ message: 'Error fetching products' });

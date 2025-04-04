@@ -10,6 +10,8 @@ import ThankYou from './pages/ThankYou';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
+import Products from './pages/Products';
+
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <GlobalStyles />
       <Router>
         <Routes>
+        <Route path="/products/:category" element={<Products />} />
+
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="register" element={<Register />} />
