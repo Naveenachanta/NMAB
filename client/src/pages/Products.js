@@ -298,8 +298,8 @@ const Products = () => {
           {products.map((product) => (
             <ProductItem key={product._id}>
               <ImageContainer>
-                <img src={product.image} alt={product.name} />
-                <HeartIcon />
+              <img src={product.images?.[0] || product.image} alt={product.name} />
+              <HeartIcon />
               </ImageContainer>
               <ProductInfo>
                 <h3>{product.name}</h3>

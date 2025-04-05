@@ -4,8 +4,10 @@ const productSchema = new mongoose.Schema({
   name: String,
   description: String,
   category: String,
+  subcategory: String,
+  price: Number,
   tags: [String],
-  image: String,
+  images: [String], // ✅ multiple images
   createdAt: {
     type: Date,
     default: Date.now
