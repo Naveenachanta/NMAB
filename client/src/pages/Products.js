@@ -242,7 +242,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/products?category=${category}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/products?category=${category}`);
         let sorted = [...res.data];
 
         if (sortOption === 'lowToHigh') {
