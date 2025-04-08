@@ -1,13 +1,14 @@
+// NMABHeader.js — fully integrated with HeaderThemeContext
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MagnifyingGlass, ShoppingBag, User } from "phosphor-react";
 import { FiMenu, FiX } from "react-icons/fi";
-
-// ... (imports remain the same)
+import { useHeaderTheme } from '../context/HeaderThemeContext';
 
 const NMABHeader = ({ scrollContainerRef }) => {
   const navigate = useNavigate();
+  const { theme } = useHeaderTheme();
   const [showDropdown, setShowDropdown] = useState(false);
   const [token, setToken] = useState(null);
   const [userRole, setUserRole] = useState(null);
@@ -87,26 +88,23 @@ const NMABHeader = ({ scrollContainerRef }) => {
     { label: "Our Story", link: "/about" },
     { label: "Contact", link: "/contact" },
   ];
-  
 
   return (
-    <HeaderContainer>
+    <HeaderContainer $theme={theme}>
       <Header>
         <LogoWrapper>
-          <Logo $scrolled={scrolled} onClick={() => navigate("/dashboard")}>
-            LUMICARE
-          </Logo>
+          <Logo $scrolled={scrolled}>LUMICARE</Logo>
         </LogoWrapper>
 
         <RightIcons>
-          <IconWrapper><ShoppingBag size={24} /></IconWrapper>
+          <IconWrapper><ShoppingBag size={24} color={theme === 'light' ? '#000' : '#fff'} /></IconWrapper>
 
           <ProfileContainer>
             <IconWrapper onClick={() => setShowDropdown(!showDropdown)}>
-              <User size={24} />
+              <User size={24} color={theme === 'light' ? '#000' : '#fff'} />
             </IconWrapper>
             {showDropdown && (
-              <DropdownWrapper ref={dropdownRef}>
+              <DropdownWrapper $theme={theme} ref={dropdownRef}>
                 {!token ? (
                   <>
                     <DropdownItem onClick={() => navigate('/login')}>Login</DropdownItem>
@@ -126,7 +124,7 @@ const NMABHeader = ({ scrollContainerRef }) => {
           </ProfileContainer>
 
           <IconWrapper onClick={() => setMobileMenuOpen(true)}>
-            <FiMenu size={24} />
+            <FiMenu size={24} color={theme === 'light' ? '#000' : '#fff'} />
           </IconWrapper>
         </RightIcons>
       </Header>
@@ -135,30 +133,29 @@ const NMABHeader = ({ scrollContainerRef }) => {
         <>
           <BlurredOverlay onClick={() => setMobileMenuOpen(false)} />
           <MobileMenu>
-          <MobileMenuHeader>
-  <CloseButton onClick={() => setMobileMenuOpen(false)}>
-    <FiX size={28} />
-  </CloseButton>
-</MobileMenuHeader>
+            <MobileMenuHeader>
+              <CloseButton onClick={() => setMobileMenuOpen(false)}>
+                <FiX size={28} />
+              </CloseButton>
+            </MobileMenuHeader>
 
             <MenuSearchInput placeholder="Search LUMICARE..." />
             <MobileMenuList>
-  {mobileMenuItems.map((item, index) => (
-    <li
-      key={index}
-      onMouseEnter={() => setHoveredIndex(index)}
-      onMouseLeave={() => setHoveredIndex(null)}
-      onClick={() => {
-        setMobileMenuOpen(false);
-        navigate(item.link);
-      }}
-      className={hoveredIndex !== null && hoveredIndex !== index ? "dimmed" : ""}
-    >
-      <span className="menu-text">{item.label}</span>
-    </li>
-  ))}
-</MobileMenuList>
-
+              {mobileMenuItems.map((item, index) => (
+                <li
+                  key={index}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate(item.link);
+                  }}
+                  className={hoveredIndex !== null && hoveredIndex !== index ? "dimmed" : ""}
+                >
+                  <span className="menu-text">{item.label}</span>
+                </li>
+              ))}
+            </MobileMenuList>
           </MobileMenu>
         </>
       )}
@@ -168,13 +165,10 @@ const NMABHeader = ({ scrollContainerRef }) => {
 
 export default NMABHeader;
 
-
-// ---------------- Styled Components ----------------
-
 const HeaderContainer = styled.div`
   width: 100%;
-  background-color: black;
-  color: white;
+  background-color: ${({ $theme }) => $theme === 'light' ? '#fff' : '#000'};
+  color: ${({ $theme }) => $theme === 'light' ? '#000' : '#fff'};
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -184,13 +178,14 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem 2.5rem;  // Restored original generous spacing for desktop
+  padding: 2rem 2.5rem;
   position: relative;
 
   @media (max-width: 768px) {
-    padding: 1.2rem 1rem;  // Tighter padding for mobile
+    padding: 1.2rem 1rem;
   }
 `;
+
 const LogoWrapper = styled.div`
   position: absolute;
   left: 50%;
@@ -206,21 +201,20 @@ const Logo = styled.h1`
   font-family: "Didot", serif;
   font-weight: 400;
   font-size: 2rem;
-  letter-spacing: 0.4rem;  // Wider spacing for luxury feel
+  letter-spacing: 0.4rem;
   margin: 0;
   cursor: pointer;
-  text-transform: uppercase; // Optional: consistent caps like LV
+  text-transform: uppercase;
 `;
-
 
 const RightIcons = styled.div`
   display: flex;
-  gap: 2rem;  // Increased from 1.5rem or 1rem for better spacing
+  gap: 2rem;
   align-items: center;
   margin-left: auto;
-          
+
   @media (max-width: 768px) {
-    gap: 1.2rem;  // Still spacious, but slightly tighter for mobile
+    gap: 1.2rem;
     svg {
       width: 20px;
       height: 20px;
@@ -240,8 +234,8 @@ const DropdownWrapper = styled.div`
   position: absolute;
   top: 120%;
   right: 0;
-  background: black;
-  color: white;
+  background: ${({ $theme }) => $theme === 'light' ? '#fff' : '#000'};
+  color: ${({ $theme }) => $theme === 'light' ? '#000' : '#fff'};
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   min-width: 150px;
@@ -249,28 +243,22 @@ const DropdownWrapper = styled.div`
   opacity: 0;
   transform: translateY(-10px);
   animation: fadeInDropdown 0.3s ease forwards;
-
-  @keyframes fadeInDropdown {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 `;
 
 const DropdownItem = styled.div`
-   padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
-  border-bottom: 1px solid #333;
-  background: black;
-  color: #aaa; /* Light grey text */
-  transition: color 0.3s ease;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  color: #666;
 
   &:hover {
-    color: white; /* White on hover */
+    background: #f4f4f4;
+    color: #111;
   }
 `;
+
 const BlurredOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -282,44 +270,66 @@ const BlurredOverlay = styled.div`
   background: rgba(0, 0, 0, 0.3);
 `;
 
-
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(0,0,0,0.4);
-  z-index: 1500;
-`;
-
 const MobileMenu = styled.div`
   position: fixed;
   top: 0;
   right: 0;
   width: 400px;
   height: 100vh;
-  background: black;
+  background: ${({ theme }) => theme === 'light' ? '#fff' : '#000'};
   z-index: 2000;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.3s ease forwards;
-  overflow-y: auto;                // 🔥 enables scrolling
-  overscroll-behavior: contain;    // ✨ smooth mobile scroll containment
+  overflow-y: auto;
 
   @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(0%);
-    }
+    from { transform: translateX(100%); }
+    to { transform: translateX(0%); }
   }
 
-  // Optional: hide scrollbar for more refined look
-  &::-webkit-scrollbar {
-    display: none;
+  &::-webkit-scrollbar { display: none; }
+`;
+
+const MobileMenuHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+  color: white;
+  cursor: pointer;
+
+  span {
+    font-family: "Georgia", serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+  }
+`;
+
+const CloseButton = styled.div`
+  margin-left: auto;
+  background: white;
+  color: black;
+  border-radius: 50%;
+  padding: 0.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 26px;
+    height: 26px;
+    font-weight: bold;
+  }
+
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
   }
 `;
 
@@ -347,47 +357,6 @@ const MenuSearchInput = styled.input`
     border-bottom-color: white;
   }
 `;
-const CloseButton = styled.div`
-  margin-left: auto;
-  background: white;
-  color: black;
-  border-radius: 50%;
-  padding: 0.3rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  svg {
-    width: 26px;
-    height: 26px;
-    font-weight: bold;
-  }
-
-  &:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-    transition: all 0.2s ease-in-out;
-  }
-`;
-
-
-const MobileMenuHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 2.5rem;
-  color: white;
-  cursor: pointer;
-
-  span {
-    font-family: "Georgia", serif;
-    font-size: 0.95rem;
-    font-weight: 400;
-  }
-`;
 
 const MobileMenuList = styled.ul`
   list-style: none;
@@ -401,14 +370,14 @@ const MobileMenuList = styled.ul`
     font-size: 1.3rem;
     font-weight: 400;
     padding: 1.4rem 0;
-    color: rgba(255, 255, 255, 0.78);  // Softer white
+    color: rgba(255, 255, 255, 0.78);
     letter-spacing: 0.08rem;
     cursor: pointer;
     display: inline-block;
     transition: color 0.2s ease;
 
     &.dimmed {
-      color: rgba(255, 255, 255, 0.3);  // More faded when not hovered
+      color: rgba(255, 255, 255, 0.3);
     }
   }
 
@@ -424,7 +393,7 @@ const MobileMenuList = styled.ul`
       bottom: 0;
       height: 1px;
       width: 0;
-      background-color: rgba(255, 255, 255, 0.8);  // Smooth white underline
+      background-color: rgba(255, 255, 255, 0.8);
       transition: width 0.3s ease;
     }
 

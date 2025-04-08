@@ -11,12 +11,13 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import Products from './pages/Products';
-
-
+import ProductDetails from './pages/ProductDetails';
+import { HeaderThemeProvider } from './context/HeaderThemeContext';
 function App() {
   return (
     <>
       <GlobalStyles />
+      <HeaderThemeProvider>
       <Router>
         <Routes>
         <Route path="/products/:category" element={<Products />} />
@@ -31,9 +32,11 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
           </Route>
         </Routes>
       </Router>
+      </HeaderThemeProvider>
     </>
   );
 }

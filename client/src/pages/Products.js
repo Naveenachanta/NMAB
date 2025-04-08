@@ -1,5 +1,6 @@
+// Updated Products.js with navigation to ProductDetails and safe AddToBag
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import NMABHeader from '../components/NMABHeader';
@@ -92,7 +93,7 @@ const CustomSelect = styled.div`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem 1rem;  // 👈 Tighter spacing
+  gap: 1.5rem 1rem;
   padding: 2rem 2rem 4rem;
   max-width: 1440px;
   margin: 0 auto;
@@ -103,17 +104,13 @@ const Grid = styled.div`
   }
 `;
 
-
 const ProductItem = styled.div`
   display: flex;
   flex-direction: column;
   text-align: left;
   position: relative;
   transition: all 0.4s ease;
-
-//   &:hover {
-//     transform: translateY(-4px);
-//   }
+  cursor: pointer;
 
   &:hover img {
     transform: scale(1.13);
@@ -125,7 +122,7 @@ const HeartIcon = styled(FiHeart)`
   position: absolute;
   top: 10px;
   right: 12px;
-  font-size: 2.2rem; /* bigger heart */
+  font-size: 2.2rem;
   color: #fff;
   background: #111;
   padding: 10px;
@@ -142,25 +139,16 @@ const HeartIcon = styled(FiHeart)`
   }
 
   @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-    }
-    50% {
-      box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
-    }
-    100% {
-      box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-    }
+    0% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+    50% { box-shadow: 0 0 14px rgba(255, 255, 255, 0.35); }
+    100% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
   }
 `;
-
-
-
 
 const ImageContainer = styled.div`
   position: relative;
   width: 100%;
-  padding-top: 100%;  // 👈 Less height, more compact
+  padding-top: 100%;
   overflow: hidden;
 
   img {
@@ -173,7 +161,6 @@ const ImageContainer = styled.div`
     transition: all 0.4s ease;
   }
 `;
-
 
 const ProductInfo = styled.div`
   margin-top: 1.2rem;
@@ -232,6 +219,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState('newest');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const options = [
     { label: 'Newest', value: 'newest' },
@@ -296,16 +284,16 @@ const Products = () => {
       ) : (
         <Grid>
           {products.map((product) => (
-            <ProductItem key={product._id}>
+            <ProductItem key={product._id} onClick={() => navigate(`/product/${product._id}`)}>
               <ImageContainer>
-              <img src={product.images?.[0] || product.image} alt={product.name} />
-              <HeartIcon />
+                <img src={product.images?.[0] || product.image} alt={product.name} />
+                <HeartIcon />
               </ImageContainer>
               <ProductInfo>
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <p className="price">{product.price ? `$${product.price.toFixed(2)}` : '--'}</p>
-                <AddToBag>Add to Bag</AddToBag>
+                <AddToBag onClick={(e) => e.stopPropagation()}>Add to Bag</AddToBag>
               </ProductInfo>
             </ProductItem>
           ))}
