@@ -185,7 +185,7 @@ const Admin = () => {
     subcategory: '',
     description: '',
     tags: '',
-    image: null,
+    images: null,
   });
 
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
@@ -199,8 +199,8 @@ const Admin = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'image') {
-      setProduct({ ...product, image: files[0] });
+    if (name === 'images') {
+      setProduct({ ...product, images: files[0] });
     } else {
       setProduct({ ...product, [name]: value });
     }
@@ -236,7 +236,7 @@ const Admin = () => {
         subcategory: '',
         description: '',
         tags: '',
-        image: null,
+        images: null,
       });
     } catch (err) {
       setToast({ show: true, message: '❌ Upload failed.', type: 'error' });
@@ -276,7 +276,7 @@ const Admin = () => {
           <Label>Upload Image</Label>
           <FileUploadWrapper>
             <FileLabel htmlFor="imageUpload">Choose Image</FileLabel>
-            <FileInput id="imageUpload" name="image" type="file" accept="image/*" onChange={handleChange} required />
+            <FileInput id="imageUpload" name="images" type="file" accept="image/*" onChange={handleChange} required />
           </FileUploadWrapper>
 
           <SubmitButton type="submit">Upload Product</SubmitButton>
