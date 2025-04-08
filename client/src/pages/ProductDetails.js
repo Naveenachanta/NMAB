@@ -153,6 +153,142 @@ const PrimaryButton = styled.button`
     background: #000;
   }
 `;
+const StickyVideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+const VideoScrollWrapper = styled.div`
+  position: relative;
+  height: 120vh;
+`;
+
+const StickyVideo = styled.video`
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 94vh; /* Reduced from full screen */
+  object-fit: cover;
+  z-index: 1;
+`;
+
+
+const ScrollTextBlock = styled.div`
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    color: white;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+`;
+
+
+const ScrollTextWrapper = styled.div`
+  position: relative;
+  z-index: 2;
+  height: 180vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  div {
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+    pointer-events: all;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+`;
+
+const OverlayContent = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  z-index: 2;
+  padding: 2rem;
+
+  h2 {
+    font-size: 2.2rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+`;
 
 const SecondaryButton = styled.button`
   background: #fff;
@@ -410,16 +546,29 @@ const ProductDetails = () => {
           ))}
         </SuggestionGrid>
       </SuggestionsSection>
-  <VideoWrapper>
-    <video
-      src="/perfumevideo.mp4"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-    />
-  </VideoWrapper>
+      <ScrollVideoWrapper>
+  <StickyVideo src="/perfumevideo.mp4" autoPlay muted loop playsInline />
+
+  <ScrollOverlay>
+  <motion.div
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, amount: 0.3 }}
+  transition={{ duration: 0.6, ease: 'easeOut' }}
+>
+  <h2>Explore Our Premium Perfume Collection</h2>
+  <button onClick={() => {
+    document.getElementById('perfume-collection')?.scrollIntoView({ behavior: 'smooth' });
+  }}>
+    Discover More
+  </button>
+</motion.div>
+  </ScrollOverlay>
+</ScrollVideoWrapper>
+
+
+
+
       <SuggestionsSection>
         <SectionTitle>Lumicare Suggestions for You</SectionTitle>
         <SuggestionGrid>
@@ -439,3 +588,57 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+const ScrollVideoWrapper = styled.div`
+  position: relative;
+  height: 200vh; /* space for scroll effect */
+`;
+
+
+const ScrollOverlay = styled.div`
+  position: absolute;
+  top: 94vh; /* Start exactly at end of video */
+  height: 91vh;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start; /* Scroll up from below */
+  justify-content: center;
+  pointer-events: none;
+
+  div {
+    position: sticky;
+    top: 47vh; /* Stops in center of video */
+    transform: translateY(0); /* No extra offset */
+    text-align: center;
+    color: #fff;
+    pointer-events: all;
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+`;
+
+
+
