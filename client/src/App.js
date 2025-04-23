@@ -13,16 +13,20 @@ import Admin from './pages/Admin';
 import Products from './pages/Products';
 import ProductDetails from './pages/ProductDetails';
 import { HeaderThemeProvider } from './context/HeaderThemeContext';
+import Bag from './pages/Bag';
+import SideCart from './components/SideCart';
+
 function App() {
   return (
     <>
       <GlobalStyles />
       <HeaderThemeProvider>
-      <Router>
+      <SideCart /> 
         <Routes>
         <Route path="/products/:category" element={<Products />} />
 
           <Route path="/" element={<Layout />}>
+          <Route path="/bag" element={<Bag />} />
             <Route index element={<Dashboard />} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
@@ -35,7 +39,6 @@ function App() {
             <Route path="/product/:id" element={<ProductDetails />} />
           </Route>
         </Routes>
-      </Router>
       </HeaderThemeProvider>
     </>
   );

@@ -5,7 +5,8 @@ import styled from "styled-components";
 import { MagnifyingGlass, ShoppingBag, User } from "phosphor-react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useHeaderTheme } from '../context/HeaderThemeContext';
-
+import { useCart } from '../context/CartContext';
+import { Bag } from 'phosphor-react'
 const NMABHeader = ({ scrollContainerRef }) => {
   const navigate = useNavigate();
   const { theme } = useHeaderTheme();
@@ -16,7 +17,7 @@ const NMABHeader = ({ scrollContainerRef }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef();
-
+  const { cartItems, isCartOpen, setCartOpen } = useCart();
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
@@ -51,13 +52,19 @@ const NMABHeader = ({ scrollContainerRef }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest('.profile-icon')
+      ) {
         setShowDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  
+  
 
   useEffect(() => {
     const container = scrollContainerRef?.current;
@@ -88,40 +95,44 @@ const NMABHeader = ({ scrollContainerRef }) => {
     { label: "Our Story", link: "/about" },
     { label: "Contact", link: "/contact" },
   ];
-
+  // console.log("cart is" + cart)
   return (
     <HeaderContainer $theme={theme}>
       <Header>
         <LogoWrapper>
-          <Logo $scrolled={scrolled}>LUMICARE</Logo>
+          <Logo $scrolled={scrolled} onClick={() => navigate("/dashboard")}>LUMICARE</Logo>
         </LogoWrapper>
 
         <RightIcons>
-          <IconWrapper><ShoppingBag size={24} color={theme === 'light' ? '#000' : '#fff'} /></IconWrapper>
+        <CartIconWrapper onClick={() => setCartOpen(!isCartOpen)}>
+  <Bag className="icon" />
+  {Array.isArray(cartItems) && cartItems.length > 0 && <ItemCount>{cartItems.length}</ItemCount>}
+</CartIconWrapper>
 
-          <ProfileContainer>
-            <IconWrapper onClick={() => setShowDropdown(!showDropdown)}>
-              <User size={24} color={theme === 'light' ? '#000' : '#fff'} />
-            </IconWrapper>
-            {showDropdown && (
-              <DropdownWrapper $theme={theme} ref={dropdownRef}>
-                {!token ? (
-                  <>
-                    <DropdownItem onClick={() => navigate('/login')}>Login</DropdownItem>
-                    <DropdownItem onClick={() => navigate('/register')}>Register</DropdownItem>
-                  </>
-                ) : (
-                  <>
-                    <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
-                    {userRole === 'admin' && (
-                      <DropdownItem onClick={() => navigate('/admin')}>Admin</DropdownItem>
-                    )}
-                    <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
-                  </>
-                )}
-              </DropdownWrapper>
-            )}
-          </ProfileContainer>
+          <ProfileContainer $dropdownOpen={showDropdown} $theme={theme}>
+  <IconWrapper onClick={() => setShowDropdown(!showDropdown)}>
+    <User size={24} color={theme === 'light' ? '#000' : '#fff'} />
+  </IconWrapper>
+  {showDropdown && (
+    <DropdownWrapper $theme={theme} ref={dropdownRef}>
+      {!token ? (
+        <>
+          <DropdownItem onClick={() => navigate('/login')}>Login</DropdownItem>
+          <DropdownItem onClick={() => navigate('/register')}>Register</DropdownItem>
+        </>
+      ) : (
+        <>
+          <DropdownItem onClick={() => navigate('/profile')}>Profile</DropdownItem>
+          {userRole === 'admin' && (
+            <DropdownItem onClick={() => navigate('/admin')}>Admin</DropdownItem>
+          )}
+          <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+        </>
+      )}
+    </DropdownWrapper>
+  )}
+</ProfileContainer>
+
 
           <IconWrapper onClick={() => setMobileMenuOpen(true)}>
             <FiMenu size={24} color={theme === 'light' ? '#000' : '#fff'} />
@@ -185,6 +196,23 @@ const Header = styled.div`
     padding: 1.2rem 1rem;
   }
 `;
+const CartCount = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #dcdcdc; /* soft Gucci-style grey */
+  color: #000;
+  font-size: 10px;
+  font-weight: 600;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+`;
+
 
 const LogoWrapper = styled.div`
   position: absolute;
@@ -221,6 +249,54 @@ const RightIcons = styled.div`
     }
   }
 `;
+const CartIconWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    font-size: 30px; // increased size to match Gucci
+    color: ${({ theme }) => theme === 'light' ? '#000' : '#fff'};
+  }
+`;
+
+const ItemCount = styled.span`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  color: white;
+  font-weight: 500;
+  background: transparent;
+  padding: 0;
+  line-height: 1;
+  pointer-events: none;
+`;
+
+
+const BagWithCount = styled.div`
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CenteredCount = styled.span`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 600;
+  color: #aaa;
+  pointer-events: none;
+`;
+
+
 
 const IconWrapper = styled.div`
   cursor: pointer;
@@ -228,14 +304,24 @@ const IconWrapper = styled.div`
 
 const ProfileContainer = styled.div`
   position: relative;
+  background-color: ${({ $dropdownOpen, $theme }) =>
+    $dropdownOpen
+      ? $theme === 'light'
+        ? 'rgba(0, 0, 0, 0.05)'
+        : 'rgba(255, 255, 255, 0.1)'
+      : 'transparent'};
+  border-radius: 50%;
+  padding: 0.4rem;
+  transition: background-color 0.3s ease;
 `;
+
 
 const DropdownWrapper = styled.div`
   position: absolute;
   top: 120%;
   right: 0;
-  background: ${({ $theme }) => $theme === 'light' ? '#fff' : '#000'};
-  color: ${({ $theme }) => $theme === 'light' ? '#000' : '#fff'};
+  background:black;
+  color: white;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   min-width: 150px;
@@ -243,19 +329,22 @@ const DropdownWrapper = styled.div`
   opacity: 0;
   transform: translateY(-10px);
   animation: fadeInDropdown 0.3s ease forwards;
+  @keyframes fadeInDropdown{
+  to{
+  opacity: 1;
+      transform: translateY(0);}}
 `;
 
 const DropdownItem = styled.div`
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
-  border-bottom: 1px solid #ddd;
-  background: transparent;
-  color: #666;
+  border-bottom: 1px solid #333;
+  background: black;
+  color: #aaa;
 
   &:hover {
-    background: #f4f4f4;
-    color: #111;
+    color: white;
   }
 `;
 
@@ -308,6 +397,27 @@ const MobileMenuHeader = styled.div`
     font-weight: 400;
   }
 `;
+const CartBadge = styled.div`
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 16px;
+  height: 16px;
+  background-color: #e0e0e0;
+  color: #111;
+  font-size: 0.6rem;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  font-family: 'Arial', sans-serif;
+  line-height: 1;
+  box-shadow: 0 0 1px rgba(0,0,0,0.1);
+`;
+
 
 const CloseButton = styled.div`
   margin-left: auto;

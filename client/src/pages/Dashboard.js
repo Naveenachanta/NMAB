@@ -344,7 +344,7 @@ const Dashboard = () => {
           <ScrollWrapper ref={scrollRef}>
             {products.map((product) => (
               <ProductCard key={product._id}>
-                <ProductImage src={product.image} alt={product.name} />
+                <ProductImage src={product.image || product.images} alt={product.name} />
                 <ProductName>{product.name}</ProductName>
                 <ProductStatus>{product.price ? `$${product.price}` : 'Coming soon'}</ProductStatus>
               </ProductCard>
